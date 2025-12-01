@@ -1,0 +1,65 @@
+Table rules {
+  id int [pk]
+  categoryId int [not null, ref: > rule_categories.id]
+  rawContent text [not null]
+  defaultPriority int [not null, default: 50]
+}
+
+Table text_blocks {
+  id int [pk]
+  rawContent text [not null]
+  defaultPriority int [not null, default: 50]
+}
+
+Table rule_categories {
+  id int [pk]
+  name text [not null, unique]
+}
+
+Enum document_type {
+  general
+  rule
+}
+
+Table documents {
+  id int [pk]
+  documentType document_type [not null]
+  filename text [not null]
+}
+
+Table document_text_blocks {
+  documentId int [not null, ref: > documents.id]
+  textBlockId int [not null, ref: > text_blocks.id]
+  priority int [not null]
+  isEnabled bool [not null, default: true]
+
+  indexes {
+    (documentId, textBlockId) [pk]
+  }
+}
+
+Table document_rules {
+  documentId int [not null, ref: > documents.id]
+  ruleId int [not null, ref: > rules.id]
+  priority int [not null]
+  isEnabled bool [not null, default: true]
+
+  indexes {
+    (documentId, ruleId) [pk]
+  }
+}
+
+Table document_collection {
+  id int [pk]
+  name text [not null, unique]
+}
+
+Table document_collection_documents {
+  documentCollectionId int [not null, ref: > document_collection.id]
+  documentId int [not null, ref: > documents.id]
+  path text [not null]
+
+  indexes {
+    (documentCollectionId, documentId) [pk]
+  }
+}
