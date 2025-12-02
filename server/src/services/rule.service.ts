@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { prisma } from "../lib/prisma.js";
-import { handlePrismaError } from "../utils/errors.js";
+import { withErrorHandling } from "../utils/errors.js";
 import type { CreateRuleInput, UpdateRuleInput } from "../lib/schemas/index.js";
 
-export const createRule = async (data: CreateRuleInput) => {
+const createRuleImpl = async (data: CreateRuleInput) => {
   return await prisma.$transaction(async (tx) => {
     // Create the rule
     const rule = await tx.rule.create({
@@ -35,7 +35,7 @@ export const createRule = async (data: CreateRuleInput) => {
   });
 };
 
-export const getAllRules = async () => {
+const getAllRulesImpl = async () => {
   return await prisma.rule.findMany({
     include: {
       category: true,
@@ -44,7 +44,7 @@ export const getAllRules = async () => {
   });
 };
 
-export const getRuleById = async (id: number) => {
+const getRuleByIdImpl = async (id: number) => {
   const rule = await prisma.rule.findUnique({
     where: { id },
     include: {
@@ -62,29 +62,27 @@ export const getRuleById = async (id: number) => {
   return rule;
 };
 
-export const updateRule = async (id: number, data: UpdateRuleInput) => {
-  try {
-    return await prisma.rule.update({
-      where: { id },
-      data,
-      include: {
-        category: true,
-      },
-    });
-  } catch (error) {
-    return handlePrismaError(error, "Rule");
-  }
+const updateRuleImpl = async (id: number, data: UpdateRuleInput) => {
+  return await prisma.rule.update({
+    where: { id },
+    data,
+    include: {
+      category: true,
+    },
+  });
 };
 
-export const deleteRule = async (id: number) => {
-  try {
-    return await prisma.rule.delete({
-      where: { id },
-      include: {
-        category: true,
-      },
-    });
-  } catch (error) {
-    return handlePrismaError(error, "Rule");
-  }
+const deleteRuleImpl = async (id: number) => {
+  return await prisma.rule.delete({
+    where: { id },
+    include: {
+      category: true,
+    },
+  });
 };
+
+export const createRule = withErrorHandling(createRuleImpl, "Rule");
+export const getAllRules = withErrorHandling(getAllRulesImpl, "Rule");
+export const getRuleById = withErrorHandling(getRuleByIdImpl, "Rule");
+export const updateRule = withErrorHandling(updateRuleImpl, "Rule");
+export const deleteRule = withErrorHandling(deleteRuleImpl, "Rule");

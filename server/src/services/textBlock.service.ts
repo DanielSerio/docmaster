@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { prisma } from "../lib/prisma.js";
-import { handlePrismaError } from "../utils/errors.js";
+import { withErrorHandling } from "../utils/errors.js";
 import type { CreateTextBlockInput, UpdateTextBlockInput } from "../lib/schemas/index.js";
 
-export const createTextBlock = async (data: CreateTextBlockInput) => {
+const createTextBlockImpl = async (data: CreateTextBlockInput) => {
   return await prisma.$transaction(async (tx) => {
     // Create the text block
     const textBlock = await tx.textBlock.create({
@@ -32,13 +32,13 @@ export const createTextBlock = async (data: CreateTextBlockInput) => {
   });
 };
 
-export const getAllTextBlocks = async () => {
+const getAllTextBlocksImpl = async () => {
   return await prisma.textBlock.findMany({
     orderBy: { id: "asc" },
   });
 };
 
-export const getTextBlockById = async (id: number) => {
+const getTextBlockByIdImpl = async (id: number) => {
   const textBlock = await prisma.textBlock.findUnique({
     where: { id },
   });
@@ -53,23 +53,21 @@ export const getTextBlockById = async (id: number) => {
   return textBlock;
 };
 
-export const updateTextBlock = async (id: number, data: UpdateTextBlockInput) => {
-  try {
-    return await prisma.textBlock.update({
-      where: { id },
-      data,
-    });
-  } catch (error) {
-    return handlePrismaError(error, "Text block");
-  }
+const updateTextBlockImpl = async (id: number, data: UpdateTextBlockInput) => {
+  return await prisma.textBlock.update({
+    where: { id },
+    data,
+  });
 };
 
-export const deleteTextBlock = async (id: number) => {
-  try {
-    return await prisma.textBlock.delete({
-      where: { id },
-    });
-  } catch (error) {
-    return handlePrismaError(error, "Text block");
-  }
+const deleteTextBlockImpl = async (id: number) => {
+  return await prisma.textBlock.delete({
+    where: { id },
+  });
 };
+
+export const createTextBlock = withErrorHandling(createTextBlockImpl, "Text block");
+export const getAllTextBlocks = withErrorHandling(getAllTextBlocksImpl, "Text block");
+export const getTextBlockById = withErrorHandling(getTextBlockByIdImpl, "Text block");
+export const updateTextBlock = withErrorHandling(updateTextBlockImpl, "Text block");
+export const deleteTextBlock = withErrorHandling(deleteTextBlockImpl, "Text block");

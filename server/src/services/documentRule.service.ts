@@ -1,10 +1,11 @@
 import { prisma } from "../lib/prisma.js";
+import { withErrorHandling } from "../utils/errors.js";
 import type {
   UpdateDocumentRulePriorityInput,
   ToggleDocumentRuleEnabledInput,
 } from "../lib/schemas/index.js";
 
-export const getDocumentRules = async (documentId: number) => {
+const getDocumentRulesImpl = async (documentId: number) => {
   return await prisma.documentRule.findMany({
     where: { documentId },
     include: {
@@ -18,7 +19,7 @@ export const getDocumentRules = async (documentId: number) => {
   });
 };
 
-export const updateDocumentRulePriority = async (data: UpdateDocumentRulePriorityInput) => {
+const updateDocumentRulePriorityImpl = async (data: UpdateDocumentRulePriorityInput) => {
   return await prisma.$transaction(async (tx) => {
     // Update the junction record
     const documentRule = await tx.documentRule.update({
@@ -50,7 +51,7 @@ export const updateDocumentRulePriority = async (data: UpdateDocumentRulePriorit
   });
 };
 
-export const toggleDocumentRuleEnabled = async (data: ToggleDocumentRuleEnabledInput) => {
+const toggleDocumentRuleEnabledImpl = async (data: ToggleDocumentRuleEnabledInput) => {
   return await prisma.$transaction(async (tx) => {
     // Update the junction record
     const documentRule = await tx.documentRule.update({
@@ -81,3 +82,7 @@ export const toggleDocumentRuleEnabled = async (data: ToggleDocumentRuleEnabledI
     return documentRule;
   });
 };
+
+export const getDocumentRules = withErrorHandling(getDocumentRulesImpl, "Document rule");
+export const updateDocumentRulePriority = withErrorHandling(updateDocumentRulePriorityImpl, "Document rule");
+export const toggleDocumentRuleEnabled = withErrorHandling(toggleDocumentRuleEnabledImpl, "Document rule");

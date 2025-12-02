@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { prisma } from "../lib/prisma.js";
-import { handlePrismaError } from "../utils/errors.js";
+import { withErrorHandling } from "../utils/errors.js";
 import type { CreateDocumentInput, UpdateDocumentInput } from "../lib/schemas/index.js";
 
-export const createDocument = async (data: CreateDocumentInput) => {
+const createDocumentImpl = async (data: CreateDocumentInput) => {
   return await prisma.$transaction(async (tx) => {
     // Create the document
     const document = await tx.document.create({
@@ -50,13 +50,13 @@ export const createDocument = async (data: CreateDocumentInput) => {
   });
 };
 
-export const getAllDocuments = async () => {
+const getAllDocumentsImpl = async () => {
   return await prisma.document.findMany({
     orderBy: { id: "asc" },
   });
 };
 
-export const getDocumentById = async (id: number) => {
+const getDocumentByIdImpl = async (id: number) => {
   const document = await prisma.document.findUnique({
     where: { id },
   });
@@ -71,23 +71,21 @@ export const getDocumentById = async (id: number) => {
   return document;
 };
 
-export const updateDocument = async (id: number, data: UpdateDocumentInput) => {
-  try {
-    return await prisma.document.update({
-      where: { id },
-      data,
-    });
-  } catch (error) {
-    return handlePrismaError(error, "Document");
-  }
+const updateDocumentImpl = async (id: number, data: UpdateDocumentInput) => {
+  return await prisma.document.update({
+    where: { id },
+    data,
+  });
 };
 
-export const deleteDocument = async (id: number) => {
-  try {
-    return await prisma.document.delete({
-      where: { id },
-    });
-  } catch (error) {
-    return handlePrismaError(error, "Document");
-  }
+const deleteDocumentImpl = async (id: number) => {
+  return await prisma.document.delete({
+    where: { id },
+  });
 };
+
+export const createDocument = withErrorHandling(createDocumentImpl, "Document");
+export const getAllDocuments = withErrorHandling(getAllDocumentsImpl, "Document");
+export const getDocumentById = withErrorHandling(getDocumentByIdImpl, "Document");
+export const updateDocument = withErrorHandling(updateDocumentImpl, "Document");
+export const deleteDocument = withErrorHandling(deleteDocumentImpl, "Document");

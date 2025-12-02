@@ -8,7 +8,7 @@ const RootLayout = () => (
 
     <Outlet />
 
-    <TanStackRouterDevtools />
+    {import.meta.env.DEV && <TanStackRouterDevtools />}
   </Layout>
 );
 

@@ -1,21 +1,21 @@
 import { TRPCError } from "@trpc/server";
 import { prisma } from "../lib/prisma.js";
-import { handlePrismaError } from "../utils/errors.js";
+import { withErrorHandling } from "../utils/errors.js";
 import type { CreateDocumentCollectionInput, UpdateDocumentCollectionInput } from "../lib/schemas/index.js";
 
-export const createDocumentCollection = async (data: CreateDocumentCollectionInput) => {
+const createDocumentCollectionImpl = async (data: CreateDocumentCollectionInput) => {
   return await prisma.documentCollection.create({
     data,
   });
 };
 
-export const getAllDocumentCollections = async () => {
+const getAllDocumentCollectionsImpl = async () => {
   return await prisma.documentCollection.findMany({
     orderBy: { id: "asc" },
   });
 };
 
-export const getDocumentCollectionById = async (id: number) => {
+const getDocumentCollectionByIdImpl = async (id: number) => {
   const documentCollection = await prisma.documentCollection.findUnique({
     where: { id },
   });
@@ -30,23 +30,21 @@ export const getDocumentCollectionById = async (id: number) => {
   return documentCollection;
 };
 
-export const updateDocumentCollection = async (id: number, data: UpdateDocumentCollectionInput) => {
-  try {
-    return await prisma.documentCollection.update({
-      where: { id },
-      data
-    });
-  } catch (error) {
-    return handlePrismaError(error, "Document collection");
-  }
+const updateDocumentCollectionImpl = async (id: number, data: UpdateDocumentCollectionInput) => {
+  return await prisma.documentCollection.update({
+    where: { id },
+    data
+  });
 };
 
-export const deleteDocumentCollection = async (id: number) => {
-  try {
-    return await prisma.documentCollection.delete({
-      where: { id },
-    });
-  } catch (error) {
-    return handlePrismaError(error, "Document collection");
-  }
+const deleteDocumentCollectionImpl = async (id: number) => {
+  return await prisma.documentCollection.delete({
+    where: { id },
+  });
 };
+
+export const createDocumentCollection = withErrorHandling(createDocumentCollectionImpl, "Document collection");
+export const getAllDocumentCollections = withErrorHandling(getAllDocumentCollectionsImpl, "Document collection");
+export const getDocumentCollectionById = withErrorHandling(getDocumentCollectionByIdImpl, "Document collection");
+export const updateDocumentCollection = withErrorHandling(updateDocumentCollectionImpl, "Document collection");
+export const deleteDocumentCollection = withErrorHandling(deleteDocumentCollectionImpl, "Document collection");

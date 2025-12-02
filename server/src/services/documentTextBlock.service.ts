@@ -1,10 +1,11 @@
 import { prisma } from "../lib/prisma.js";
+import { withErrorHandling } from "../utils/errors.js";
 import type {
   UpdateDocumentTextBlockPriorityInput,
   ToggleDocumentTextBlockEnabledInput,
 } from "../lib/schemas/index.js";
 
-export const getDocumentTextBlocks = async (documentId: number) => {
+const getDocumentTextBlocksImpl = async (documentId: number) => {
   return await prisma.documentTextBlock.findMany({
     where: { documentId },
     include: {
@@ -14,7 +15,7 @@ export const getDocumentTextBlocks = async (documentId: number) => {
   });
 };
 
-export const updateDocumentTextBlockPriority = async (data: UpdateDocumentTextBlockPriorityInput) => {
+const updateDocumentTextBlockPriorityImpl = async (data: UpdateDocumentTextBlockPriorityInput) => {
   return await prisma.$transaction(async (tx) => {
     // Update the junction record
     const documentTextBlock = await tx.documentTextBlock.update({
@@ -42,7 +43,7 @@ export const updateDocumentTextBlockPriority = async (data: UpdateDocumentTextBl
   });
 };
 
-export const toggleDocumentTextBlockEnabled = async (data: ToggleDocumentTextBlockEnabledInput) => {
+const toggleDocumentTextBlockEnabledImpl = async (data: ToggleDocumentTextBlockEnabledInput) => {
   return await prisma.$transaction(async (tx) => {
     // Update the junction record
     const documentTextBlock = await tx.documentTextBlock.update({
@@ -69,3 +70,7 @@ export const toggleDocumentTextBlockEnabled = async (data: ToggleDocumentTextBlo
     return documentTextBlock;
   });
 };
+
+export const getDocumentTextBlocks = withErrorHandling(getDocumentTextBlocksImpl, "Document text block");
+export const updateDocumentTextBlockPriority = withErrorHandling(updateDocumentTextBlockPriorityImpl, "Document text block");
+export const toggleDocumentTextBlockEnabled = withErrorHandling(toggleDocumentTextBlockEnabledImpl, "Document text block");
