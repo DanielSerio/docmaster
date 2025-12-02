@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { prisma } from "../lib/prisma.js";
+import { handlePrismaError } from "../utils/errors.js";
 import type { CreateTextBlockInput, UpdateTextBlockInput } from "../lib/schemas/index.js";
 
 export const createTextBlock = async (data: CreateTextBlockInput) => {
@@ -37,20 +39,37 @@ export const getAllTextBlocks = async () => {
 };
 
 export const getTextBlockById = async (id: number) => {
-  return await prisma.textBlock.findUnique({
+  const textBlock = await prisma.textBlock.findUnique({
     where: { id },
   });
+
+  if (!textBlock) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: `Text block with id ${id} not found`,
+    });
+  }
+
+  return textBlock;
 };
 
 export const updateTextBlock = async (id: number, data: UpdateTextBlockInput) => {
-  return await prisma.textBlock.update({
-    where: { id },
-    data,
-  });
+  try {
+    return await prisma.textBlock.update({
+      where: { id },
+      data,
+    });
+  } catch (error) {
+    return handlePrismaError(error, "Text block");
+  }
 };
 
 export const deleteTextBlock = async (id: number) => {
-  return await prisma.textBlock.delete({
-    where: { id },
-  });
+  try {
+    return await prisma.textBlock.delete({
+      where: { id },
+    });
+  } catch (error) {
+    return handlePrismaError(error, "Text block");
+  }
 };

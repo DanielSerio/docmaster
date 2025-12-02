@@ -25,7 +25,7 @@ export const textBlockRouter = router({
 
   getById: publicProcedure
     .input(z.object({ id: textBlockIdSchema }))
-    .output(textBlockSchema.nullable())
+    .output(textBlockSchema)
     .query(async ({ input }) => {
       return await textBlockService.getTextBlockById(input.id);
     }),

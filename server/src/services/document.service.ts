@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { prisma } from "../lib/prisma.js";
+import { handlePrismaError } from "../utils/errors.js";
 import type { CreateDocumentInput, UpdateDocumentInput } from "../lib/schemas/index.js";
 
 export const createDocument = async (data: CreateDocumentInput) => {
@@ -55,23 +57,40 @@ export const getAllDocuments = async () => {
 };
 
 export const getDocumentById = async (id: number) => {
-  return await prisma.document.findUnique({
+  const document = await prisma.document.findUnique({
     where: { id },
   });
+
+  if (!document) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: `Document with id ${id} not found`,
+    });
+  }
+
+  return document;
 };
 
 export const updateDocument = async (id: number, data: UpdateDocumentInput) => {
-  return await prisma.document.update({
-    where: { id },
-    data: {
-      ...data,
-      updatedAt: new Date(),
-    },
-  });
+  try {
+    return await prisma.document.update({
+      where: { id },
+      data: {
+        ...data,
+        updatedAt: new Date(),
+      },
+    });
+  } catch (error) {
+    return handlePrismaError(error, "Document");
+  }
 };
 
 export const deleteDocument = async (id: number) => {
-  return await prisma.document.delete({
-    where: { id },
-  });
+  try {
+    return await prisma.document.delete({
+      where: { id },
+    });
+  } catch (error) {
+    return handlePrismaError(error, "Document");
+  }
 };

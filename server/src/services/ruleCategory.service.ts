@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { prisma } from "../lib/prisma.js";
+import { handlePrismaError } from "../utils/errors.js";
 import type { CreateRuleCategoryInput, UpdateRuleCategoryInput } from "../lib/schemas/index.js";
 
 export const createRuleCategory = async (data: CreateRuleCategoryInput) => {
@@ -14,20 +16,37 @@ export const getAllRuleCategories = async () => {
 };
 
 export const getRuleCategoryById = async (id: number) => {
-  return await prisma.ruleCategory.findUnique({
+  const ruleCategory = await prisma.ruleCategory.findUnique({
     where: { id },
   });
+
+  if (!ruleCategory) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: `Rule category with id ${id} not found`,
+    });
+  }
+
+  return ruleCategory;
 };
 
 export const updateRuleCategory = async (id: number, data: UpdateRuleCategoryInput) => {
-  return await prisma.ruleCategory.update({
-    where: { id },
-    data,
-  });
+  try {
+    return await prisma.ruleCategory.update({
+      where: { id },
+      data,
+    });
+  } catch (error) {
+    return handlePrismaError(error, "Rule category");
+  }
 };
 
 export const deleteRuleCategory = async (id: number) => {
-  return await prisma.ruleCategory.delete({
-    where: { id },
-  });
+  try {
+    return await prisma.ruleCategory.delete({
+      where: { id },
+    });
+  } catch (error) {
+    return handlePrismaError(error, "Rule category");
+  }
 };

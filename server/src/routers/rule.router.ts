@@ -25,7 +25,7 @@ export const ruleRouter = router({
 
   getById: publicProcedure
     .input(z.object({ id: ruleIdSchema }))
-    .output(ruleWithCategorySchema.nullable())
+    .output(ruleWithCategorySchema)
     .query(async ({ input }) => {
       return await ruleService.getRuleById(input.id);
     }),

@@ -25,7 +25,7 @@ export const documentRouter = router({
 
   getById: publicProcedure
     .input(z.object({ id: documentIdSchema }))
-    .output(documentSchema.nullable())
+    .output(documentSchema)
     .query(async ({ input }) => {
       return await documentService.getDocumentById(input.id);
     }),

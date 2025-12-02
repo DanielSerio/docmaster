@@ -25,7 +25,7 @@ export const documentCollectionRouter = router({
 
   getById: publicProcedure
     .input(z.object({ id: documentCollectionIdSchema }))
-    .output(documentCollectionSchema.nullable())
+    .output(documentCollectionSchema)
     .query(async ({ input }) => {
       return await documentCollectionService.getDocumentCollectionById(input.id);
     }),
