@@ -14,7 +14,7 @@ services:
       - docmaster-test
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U docmaster_test"]
       interval: 5s
       timeout: 5s
       retries: 5
