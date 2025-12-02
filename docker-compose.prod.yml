@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+      target: production
+    container_name: docmaster-server-prod
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - docmaster-prod
+    restart: always
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/trpc/health.check', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  client:
+    build:
+      context: ./client
+      target: production
+    container_name: docmaster-client-prod
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - server
+    networks:
+      - docmaster-prod
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  docmaster-prod:
+    driver: bridge

@@ -14,9 +14,13 @@ dist
 .env.test
 .env.production
 
+# Testing
 *storybook.log
 storybook-static
 test-results
 test-results/*
 playwright-report
 playwright-report/*
+
+# Docker
+docker-compose.override.yml

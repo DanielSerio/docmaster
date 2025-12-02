@@ -1,0 +1,13 @@
+node_modules
+dist
+npm-debug.log
+.env
+*.log
+.DS_Store
+coverage
+.git
+.gitignore
+README.md
+playwright-report
+test-results
+.storybook/public

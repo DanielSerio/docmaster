@@ -8,7 +8,31 @@ DocMaster is a document management system for managing AI agent documentation in
 
 ## Commands
 
-### Running the Application
+### Running with Docker (Recommended)
+
+Each environment runs on different ports to allow side-by-side operation:
+
+```bash
+# Development environment
+./start-dev.sh
+# Server: http://localhost:3000
+# Client: http://localhost:5173
+
+# Testing environment
+./start-test.sh
+# Server: http://localhost:3001
+# Client: http://localhost:5174
+
+# Production environment
+./start-prod.sh
+# Server: http://localhost:3002
+# Client: http://localhost:8080
+
+# Stop all environments
+./stop-all.sh
+```
+
+### Running Locally (Without Docker)
 ```bash
 # Terminal 1 - Start the server (runs on port 3000)
 cd server
@@ -168,11 +192,34 @@ The repository supports three documentation commands:
 - Always update `docs/core/schema.dbml` after schema changes
 - Refer to schema.dbml as source of truth for database structure
 
-## Environment Setup
+## Docker Setup
 
-The project uses Docker for development with three separate environments:
-- `development`
-- `testing`
-- `production`
+The project uses Docker with three separate environments that can run side-by-side:
 
-Each environment has its own database and configuration, and can run side-by-side on different ports.
+### Environment Details
+
+| Environment | Server Port | Client Port | Purpose |
+|------------|-------------|-------------|---------|
+| Development | 3000 | 5173 | Hot reload, volume mounts for live code updates |
+| Testing | 3001 | 5174 | Isolated testing environment |
+| Production | 3002 | 8080 | Optimized builds with health checks |
+
+### Docker Files
+
+- **server/Dockerfile** - Multi-stage build (development, builder, production)
+- **client/Dockerfile** - Multi-stage build (development with Vite, production with nginx)
+- **docker-compose.dev.yml** - Development environment with volume mounts
+- **docker-compose.test.yml** - Testing environment
+- **docker-compose.prod.yml** - Production environment with health checks
+- **start-dev.sh** - Start development environment
+- **start-test.sh** - Start testing environment
+- **start-prod.sh** - Start production environment (detached mode)
+- **stop-all.sh** - Stop all running environments
+
+### Key Features
+
+- **Hot Reload**: Development containers mount source directories as volumes
+- **Multi-stage Builds**: Optimized production images exclude dev dependencies
+- **Health Checks**: Production environment includes health monitoring
+- **Network Isolation**: Each environment has its own Docker network
+- **Side-by-side Operation**: Different ports allow running all environments simultaneously

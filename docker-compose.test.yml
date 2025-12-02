@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+      target: development
+    container_name: docmaster-server-test
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./server/src:/app/src
+      - ./server/package.json:/app/package.json
+      - ./server/tsconfig.json:/app/tsconfig.json
+    environment:
+      - NODE_ENV=test
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - docmaster-test
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      target: development
+    container_name: docmaster-client-test
+    ports:
+      - "5174:5173"
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+      - ./client/tests:/app/tests
+      - ./client/index.html:/app/index.html
+      - ./client/package.json:/app/package.json
+      - ./client/vite.config.ts:/app/vite.config.ts
+      - ./client/playwright.config.ts:/app/playwright.config.ts
+      - ./client/tsconfig.json:/app/tsconfig.json
+      - ./client/tailwind.config.js:/app/tailwind.config.js
+    environment:
+      - NODE_ENV=test
+      - VITE_API_URL=http://server:3000
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - server
+    networks:
+      - docmaster-test
+    restart: unless-stopped
+
+networks:
+  docmaster-test:
+    driver: bridge
