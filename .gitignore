@@ -11,9 +11,10 @@ dist
 .env
 .env.local
 .env.development
+.env.dev
 .env.test
 .env.production
-
+.env.prod
 # Testing
 *storybook.log
 storybook-static

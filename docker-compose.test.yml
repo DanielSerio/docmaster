@@ -6,17 +6,15 @@ services:
     container_name: docmaster-db-test
     ports:
       - "5433:5432"
-    environment:
-      - POSTGRES_USER=docmaster_test
-      - POSTGRES_PASSWORD=docmaster_test
-      - POSTGRES_DB=docmaster_test
+    env_file:
+      - .env.test
     volumes:
       - postgres-test-data:/var/lib/postgresql/data
     networks:
       - docmaster-test
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U docmaster_test"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -34,10 +32,8 @@ services:
       - ./server/package.json:/app/package.json
       - ./server/tsconfig.json:/app/tsconfig.json
       - ./server/prisma.config.ts:/app/prisma.config.ts
-    environment:
-      - NODE_ENV=test
-      - CHOKIDAR_USEPOLLING=true
-      - DATABASE_URL=postgresql://docmaster_test:docmaster_test@db-test:5432/docmaster_test?schema=public
+    env_file:
+      - .env.test
     depends_on:
       db-test:
         condition: service_healthy
@@ -62,10 +58,8 @@ services:
       - ./client/playwright.config.ts:/app/playwright.config.ts
       - ./client/tsconfig.json:/app/tsconfig.json
       - ./client/tailwind.config.js:/app/tailwind.config.js
-    environment:
-      - NODE_ENV=test
-      - VITE_API_URL=http://server:3000
-      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - .env.test
     depends_on:
       - server
     networks:
@@ -83,9 +77,8 @@ services:
       - ./client/playwright.config.ts:/app/playwright.config.ts
       - ./client/playwright-report:/app/playwright-report
       - ./client/test-results:/app/test-results
-    environment:
-      - CI=true
-      - BASE_URL=http://client:5173
+    env_file:
+      - .env.test
     depends_on:
       - client
       - server

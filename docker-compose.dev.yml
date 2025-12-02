@@ -6,17 +6,15 @@ services:
     container_name: docmaster-db-dev
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=docmaster_dev
-      - POSTGRES_PASSWORD=docmaster_dev
-      - POSTGRES_DB=docmaster_dev
+    env_file:
+      - .env.dev
     volumes:
       - postgres-dev-data:/var/lib/postgresql/data
     networks:
       - docmaster-dev
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U docmaster_dev"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -34,10 +32,8 @@ services:
       - ./server/package.json:/app/package.json
       - ./server/tsconfig.json:/app/tsconfig.json
       - ./server/prisma.config.ts:/app/prisma.config.ts
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-      - DATABASE_URL=postgresql://docmaster_dev:docmaster_dev@db-dev:5432/docmaster_dev?schema=public
+    env_file:
+      - .env.dev
     depends_on:
       db-dev:
         condition: service_healthy
@@ -60,10 +56,8 @@ services:
       - ./client/vite.config.ts:/app/vite.config.ts
       - ./client/tsconfig.json:/app/tsconfig.json
       - ./client/tailwind.config.js:/app/tailwind.config.js
-    environment:
-      - NODE_ENV=development
-      - VITE_API_URL=http://localhost:3000
-      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - .env.dev
     depends_on:
       - server
     networks:
