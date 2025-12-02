@@ -10,12 +10,16 @@ export function DocumentListPage() {
         <h1>Document List</h1>
         {listQuery.isPending && <div>Loading...</div>}
         {listQuery.isError && <div>Error: {listQuery.error.message}</div>}
-        {listQuery.data?.length === 0 && <div>No documents found</div>}
-        <ul>
-          {listQuery.data?.map((document) => (
-            <li key={document.id}>{document.filename}</li>
-          ))}
-        </ul>
+        {listQuery.isSuccess && listQuery.data.length === 0 && (
+          <div>No documents found</div>
+        )}
+        {listQuery.isSuccess && listQuery.data.length > 0 && (
+          <ul>
+            {listQuery.data.map((document) => (
+              <li key={document.id}>{document.filename}</li>
+            ))}
+          </ul>
+        )}
       </div>
     </Page>
   );
