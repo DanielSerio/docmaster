@@ -25,6 +25,8 @@ Table documents {
   id int [pk]
   documentType document_type [not null]
   filename text [not null]
+  createdAt timestamp [not null, default: `now()`]
+  updatedAt timestamp [not null, default: `now()`]
 }
 
 Table document_text_blocks {
@@ -52,6 +54,8 @@ Table document_rules {
 Table document_collection {
   id int [pk]
   name text [not null, unique]
+  createdAt timestamp [not null, default: `now()`]
+  updatedAt timestamp [not null, default: `now()`]
 }
 
 Table document_collection_documents {

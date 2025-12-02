@@ -73,3 +73,31 @@ client
     └── integration                  # Integration Tests Directory
         └── ...
 ```
+
+
+## Routing
+
+Proposed routing structure:
+
+```
+/
+├── /documents (Document List View)
+│   ├── /documents/new (Create New Document)
+│   └── /documents/:id (View/Edit Document Details)
+│       ├── /documents/:id/edit (Dedicated Document Editor)
+│       ├── /documents/:id/rules (Manage Rules in Rule Document)
+│       └── /documents/:id/blocks (Manage Text Blocks in General Document)
+│
+├── /rules (Rule Entity List View)
+│   ├── /rules/new (Create New Rule Entity)
+│   └── /rules/:ruleId (View/Edit Specific Rule Entity)
+│
+├── /textblocks (Text Block Entity List View)
+│   ├── /textblocks/new (Create New Text Block Entity)
+│   └── /textblocks/:blockId (View/Edit Specific Text Block Entity)
+│
+└── /collections (Collection List View)
+    ├── /collections/new (Create New Collection)
+    └── /collections/:collectionId (View/Edit Specific Collection)
+        └── /collections/:collectionId/download (Initiate Collection Download)
+```

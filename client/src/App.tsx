@@ -1,5 +1,4 @@
-import './App.css'
-import { trpc } from './lib/trpc/react'
+import { trpc } from './lib/trpc/react';
 
 function App() {
   const healthQuery = trpc.health.check.useQuery();
@@ -24,7 +23,7 @@ function App() {
         )}
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

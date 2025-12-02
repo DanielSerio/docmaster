@@ -46,6 +46,26 @@ services:
       - docmaster-test
     restart: unless-stopped
 
+  test-runner:
+    build:
+      context: ./client
+      target: test
+    container_name: docmaster-test-runner
+    volumes:
+      - ./client/src:/app/src
+      - ./client/tests:/app/tests
+      - ./client/playwright.config.ts:/app/playwright.config.ts
+      - ./client/playwright-report:/app/playwright-report
+      - ./client/test-results:/app/test-results
+    environment:
+      - CI=true
+      - BASE_URL=http://client:5173
+    depends_on:
+      - client
+      - server
+    networks:
+      - docmaster-test
+
 networks:
   docmaster-test:
     driver: bridge
