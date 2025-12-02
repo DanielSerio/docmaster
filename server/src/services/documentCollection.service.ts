@@ -34,10 +34,7 @@ export const updateDocumentCollection = async (id: number, data: UpdateDocumentC
   try {
     return await prisma.documentCollection.update({
       where: { id },
-      data: {
-        ...data,
-        updatedAt: new Date(),
-      },
+      data
     });
   } catch (error) {
     return handlePrismaError(error, "Document collection");

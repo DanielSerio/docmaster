@@ -75,10 +75,7 @@ export const updateDocument = async (id: number, data: UpdateDocumentInput) => {
   try {
     return await prisma.document.update({
       where: { id },
-      data: {
-        ...data,
-        updatedAt: new Date(),
-      },
+      data,
     });
   } catch (error) {
     return handlePrismaError(error, "Document");
