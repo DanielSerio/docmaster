@@ -15,6 +15,8 @@ const documentTypeSchema = z.enum(["general", "rule"], { message: getMessage("do
 const filenameSchema = z.string().min(1, getMessage("filename", "stringMin")).max(255, getMessage("filename", "stringMax"));
 const dateTimeSchema = z.date();
 
+export const documentIdSchema = idSchema;
+
 export const documentSchema = z.object({
   id: idSchema,
   documentType: documentTypeSchema,

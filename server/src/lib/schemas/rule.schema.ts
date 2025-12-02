@@ -16,6 +16,8 @@ const categoryIdSchema = z.number().int(getMessage("categoryId", "positiveIntege
 const rawContentSchema = z.string().min(1, getMessage("rawContent", "stringMin"));
 const defaultPrioritySchema = z.number().int(getMessage("defaultPriority", "positiveInteger")).min(1, getMessage("defaultPriority", "intMin")).max(100, getMessage("defaultPriority", "intMax")).default(50);
 
+export const ruleIdSchema = idSchema;
+
 export const ruleSchema = z.object({
   id: idSchema,
   categoryId: categoryIdSchema,
