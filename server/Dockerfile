@@ -4,8 +4,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN npx prisma generate
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+CMD sh -c "npx prisma migrate deploy && npm run dev"
 
 # Build stage
 FROM node:20-alpine AS builder
@@ -22,5 +23,8 @@ ENV NODE_ENV=production
 COPY package*.json ./
 RUN npm ci --only=production
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/src/generated ./src/generated
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD sh -c "npx prisma migrate deploy && npm start"

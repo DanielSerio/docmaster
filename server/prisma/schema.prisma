@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enums
+enum DocumentType {
+  general
+  rule
+}
+
+// Models
+model RuleCategory {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  rules Rule[]
+
+  @@map("rule_categories")
+}
+
+model Rule {
+  id              Int            @id @default(autoincrement())
+  categoryId      Int
+  rawContent      String
+  defaultPriority Int            @default(50)
+  category        RuleCategory   @relation(fields: [categoryId], references: [id])
+  documentRules   DocumentRule[]
+
+  @@map("rules")
+}
+
+model TextBlock {
+  id                  Int                   @id @default(autoincrement())
+  rawContent          String
+  defaultPriority     Int                   @default(50)
+  documentTextBlocks  DocumentTextBlock[]
+
+  @@map("text_blocks")
+}
+
+model Document {
+  id                         Int                          @id @default(autoincrement())
+  documentType               DocumentType
+  filename                   String
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  documentTextBlocks         DocumentTextBlock[]
+  documentRules              DocumentRule[]
+  documentCollectionDocuments DocumentCollectionDocument[]
+
+  @@map("documents")
+}
+
+model DocumentTextBlock {
+  documentId  Int
+  textBlockId Int
+  priority    Int
+  isEnabled   Boolean   @default(true)
+  document    Document  @relation(fields: [documentId], references: [id])
+  textBlock   TextBlock @relation(fields: [textBlockId], references: [id])
+
+  @@id([documentId, textBlockId])
+  @@map("document_text_blocks")
+}
+
+model DocumentRule {
+  documentId Int
+  ruleId     Int
+  priority   Int
+  isEnabled  Boolean  @default(true)
+  document   Document @relation(fields: [documentId], references: [id])
+  rule       Rule     @relation(fields: [ruleId], references: [id])
+
+  @@id([documentId, ruleId])
+  @@map("document_rules")
+}
+
+model DocumentCollection {
+  id                         Int                          @id @default(autoincrement())
+  name                       String                       @unique
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  documentCollectionDocuments DocumentCollectionDocument[]
+
+  @@map("document_collection")
+}
+
+model DocumentCollectionDocument {
+  documentCollectionId Int
+  documentId           Int
+  path                 String
+  documentCollection   DocumentCollection @relation(fields: [documentCollectionId], references: [id])
+  document             Document           @relation(fields: [documentId], references: [id])
+
+  @@id([documentCollectionId, documentId])
+  @@map("document_collection_documents")
+}

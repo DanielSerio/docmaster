@@ -34,9 +34,14 @@ Each environment runs on different ports to allow side-by-side operation:
 
 ### Running Locally (Without Docker)
 ```bash
+# Prerequisites: PostgreSQL must be running locally
+# Use environment-specific credentials from server/.env.{environment}
+
 # Terminal 1 - Start the server (runs on port 3000)
 cd server
 npm install              # First time only
+npm run prisma:generate  # Generate Prisma Client
+npm run prisma:migrate   # Run database migrations
 npm run dev
 
 # Terminal 2 - Start the client (runs on port 5173)
@@ -62,10 +67,16 @@ npm run build-storybook  # Build Storybook for production
 ```bash
 cd server
 npm run dev              # Start development server on port 3000 with hot reload
-npm run build            # Compile TypeScript
+npm run build            # Compile TypeScript and generate Prisma Client
 npm start                # Start production server
 npm run lint             # Run ESLint
 npm run type-check       # Run TypeScript compiler check
+
+# Prisma commands
+npm run prisma:generate  # Generate Prisma Client
+npm run prisma:migrate   # Create and apply database migration
+npm run prisma:studio    # Open Prisma Studio GUI
+npm run prisma:push      # Push schema changes to database without migration
 ```
 
 ### Testing
@@ -91,22 +102,32 @@ docmaster/
 
 ### Server Architecture
 
-**Tech Stack**: TypeScript, tRPC, Fastify, Zod
+**Tech Stack**: TypeScript, tRPC, Fastify, Prisma, PostgreSQL, Zod
 
 **Module Structure**:
 - `src/routers/` - tRPC routers organized by entity
 - `src/services/` - Business logic layer
+- `src/lib/prisma.ts` - Prisma Client singleton
+- `src/generated/prisma/` - Generated Prisma Client
 - `src/utils/` - Utility functions
 - `src/types/` - Shared TypeScript types
 - `src/trpc.ts` - tRPC initialization
 - `src/server.ts` - Fastify server setup
 - `src/index.ts` - Application entry point
+- `prisma/schema.prisma` - Prisma schema definition
+- `prisma/migrations/` - Database migrations
 
 **tRPC Setup**:
 - Server exports `AppRouter` type from `src/routers/index.ts`
 - Client imports this type for end-to-end type safety
 - Server runs on port 3000 with endpoint `/trpc`
 - CORS enabled for local development
+
+**Database Setup**:
+- PostgreSQL 16 is used for all environments
+- Prisma ORM for database access and migrations
+- Environment-specific databases with different credentials
+- Automatic migrations run on container startup
 
 ### Client Architecture
 
@@ -223,3 +244,27 @@ The project uses Docker with three separate environments that can run side-by-si
 - **Health Checks**: Production environment includes health monitoring
 - **Network Isolation**: Each environment has its own Docker network
 - **Side-by-side Operation**: Different ports allow running all environments simultaneously
+- **Database Integration**: Each environment has its own PostgreSQL instance with isolated data
+
+### Database Configuration
+
+Each Docker environment includes a dedicated PostgreSQL 16 container:
+
+| Environment | Database Port | Container Name | Credentials | Database Name |
+|------------|---------------|----------------|-------------|---------------|
+| Development | 5432 | docmaster-db-dev | docmaster_dev / docmaster_dev | docmaster_dev |
+| Testing | 5433 | docmaster-db-test | docmaster_test / docmaster_test | docmaster_test |
+| Production | 5434 | docmaster-db-prod | docmaster_prod / [change_me] | docmaster_prod |
+
+**Key Points**:
+- Each environment's database runs on a different port for side-by-side operation
+- Database credentials are passed via environment variables in docker-compose files
+- Persistent data stored in Docker volumes (`postgres-{env}-data`)
+- Automatic health checks ensure database is ready before starting server
+- Prisma migrations run automatically on container startup
+- For production, change the default password in `docker-compose.prod.yml`
+
+**Local Development** (without Docker):
+- Reference `server/.env.{environment}` for connection strings
+- Requires local PostgreSQL installation
+- Use `npm run prisma:migrate` to apply migrations

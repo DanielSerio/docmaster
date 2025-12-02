@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+  db-test:
+    image: postgres:16-alpine
+    container_name: docmaster-db-test
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=docmaster_test
+      - POSTGRES_PASSWORD=docmaster_test
+      - POSTGRES_DB=docmaster_test
+    volumes:
+      - postgres-test-data:/var/lib/postgresql/data
+    networks:
+      - docmaster-test
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docmaster_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   server:
     build:
       context: ./server
@@ -10,11 +30,17 @@ services:
       - "3001:3000"
     volumes:
       - ./server/src:/app/src
+      - ./server/prisma:/app/prisma
       - ./server/package.json:/app/package.json
       - ./server/tsconfig.json:/app/tsconfig.json
+      - ./server/prisma.config.ts:/app/prisma.config.ts
     environment:
       - NODE_ENV=test
       - CHOKIDAR_USEPOLLING=true
+      - DATABASE_URL=postgresql://docmaster_test:docmaster_test@db-test:5432/docmaster_test?schema=public
+    depends_on:
+      db-test:
+        condition: service_healthy
     networks:
       - docmaster-test
     restart: unless-stopped
@@ -69,3 +95,6 @@ services:
 networks:
   docmaster-test:
     driver: bridge
+
+volumes:
+  postgres-test-data:

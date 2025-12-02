@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+  db-prod:
+    image: postgres:16-alpine
+    container_name: docmaster-db-prod
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_USER=docmaster_prod
+      - POSTGRES_PASSWORD=docmaster_prod_secure_password_change_me
+      - POSTGRES_DB=docmaster_prod
+    volumes:
+      - postgres-prod-data:/var/lib/postgresql/data
+    networks:
+      - docmaster-prod
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docmaster_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   server:
     build:
       context: ./server
@@ -10,6 +30,10 @@ services:
       - "3002:3000"
     environment:
       - NODE_ENV=production
+      - DATABASE_URL=postgresql://docmaster_prod:docmaster_prod_secure_password_change_me@db-prod:5432/docmaster_prod?schema=public
+    depends_on:
+      db-prod:
+        condition: service_healthy
     networks:
       - docmaster-prod
     restart: always
@@ -42,3 +66,6 @@ services:
 networks:
   docmaster-prod:
     driver: bridge
+
+volumes:
+  postgres-prod-data:
