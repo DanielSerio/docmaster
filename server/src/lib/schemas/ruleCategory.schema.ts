@@ -12,6 +12,8 @@ const getMessage = (field: string, messageType: keyof typeof MESSAGES) => `${fie
 const idSchema = z.number().int(getMessage("id", "positiveInteger")).positive(getMessage("id", "positiveInteger"));
 const nameSchema = z.string().min(1, getMessage("name", "stringMin")).max(255, getMessage("name", "stringMax"));
 
+export const ruleCategoryIdSchema = idSchema;
+
 export const ruleCategorySchema = z.object({
   id: idSchema,
   name: nameSchema

@@ -6,6 +6,7 @@ import {
   createDocumentCollectionInputSchema,
   updateDocumentCollectionInputSchema,
   deleteDocumentCollectionInputSchema,
+  documentCollectionIdSchema,
 } from "../lib/schemas/index.js";
 
 export const documentCollectionRouter = router({
@@ -23,7 +24,7 @@ export const documentCollectionRouter = router({
     }),
 
   getById: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: documentCollectionIdSchema }))
     .output(documentCollectionSchema.nullable())
     .query(async ({ input }) => {
       return await documentCollectionService.getDocumentCollectionById(input.id);
@@ -31,7 +32,7 @@ export const documentCollectionRouter = router({
 
   update: publicProcedure
     .input(z.object({
-      id: z.number(),
+      id: documentCollectionIdSchema,
       data: updateDocumentCollectionInputSchema,
     }))
     .output(documentCollectionSchema)

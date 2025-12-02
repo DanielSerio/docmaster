@@ -14,6 +14,8 @@ const idSchema = z.number().int(getMessage("id", "positiveInteger")).positive(ge
 const rawContentSchema = z.string().min(1, getMessage("rawContent", "stringMin"));
 const defaultPrioritySchema = z.number().int(getMessage("defaultPriority", "positiveInteger")).min(1, getMessage("defaultPriority", "intMin")).max(100, getMessage("defaultPriority", "intMax")).default(50);
 
+export const textBlockIdSchema = idSchema;
+
 export const textBlockSchema = z.object({
   id: idSchema,
   rawContent: rawContentSchema,

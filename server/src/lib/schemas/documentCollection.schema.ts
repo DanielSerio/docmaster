@@ -13,6 +13,8 @@ const idSchema = z.number().int(getMessage("id", "positiveInteger")).positive(ge
 const nameSchema = z.string().min(1, getMessage("name", "stringMin")).max(255, getMessage("name", "stringMax"));
 const dateTimeSchema = z.date();
 
+export const documentCollectionIdSchema = idSchema;
+
 export const documentCollectionSchema = z.object({
   id: idSchema,
   name: nameSchema,

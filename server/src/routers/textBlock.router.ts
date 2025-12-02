@@ -6,6 +6,7 @@ import {
   createTextBlockInputSchema,
   updateTextBlockInputSchema,
   deleteTextBlockInputSchema,
+  textBlockIdSchema,
 } from "../lib/schemas/index.js";
 
 export const textBlockRouter = router({
@@ -23,7 +24,7 @@ export const textBlockRouter = router({
     }),
 
   getById: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: textBlockIdSchema }))
     .output(textBlockSchema.nullable())
     .query(async ({ input }) => {
       return await textBlockService.getTextBlockById(input.id);
@@ -31,7 +32,7 @@ export const textBlockRouter = router({
 
   update: publicProcedure
     .input(z.object({
-      id: z.number(),
+      id: textBlockIdSchema,
       data: updateTextBlockInputSchema,
     }))
     .output(textBlockSchema)

@@ -6,6 +6,7 @@ import {
   createRuleInputSchema,
   updateRuleInputSchema,
   deleteRuleInputSchema,
+  ruleIdSchema,
 } from "../lib/schemas/index.js";
 
 export const ruleRouter = router({
@@ -23,7 +24,7 @@ export const ruleRouter = router({
     }),
 
   getById: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: ruleIdSchema }))
     .output(ruleWithCategorySchema.nullable())
     .query(async ({ input }) => {
       return await ruleService.getRuleById(input.id);
@@ -31,7 +32,7 @@ export const ruleRouter = router({
 
   update: publicProcedure
     .input(z.object({
-      id: z.number(),
+      id: ruleIdSchema,
       data: updateRuleInputSchema,
     }))
     .output(ruleWithCategorySchema)
