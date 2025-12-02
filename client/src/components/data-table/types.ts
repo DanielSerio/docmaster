@@ -54,3 +54,7 @@ export interface DataTableProps<TData extends DTRowType> {
   error?: Error | null;
   skeletonRowCount?: number;
 }
+
+export type DTRowRecord<TData extends object & RowData> = TData & {
+  lineNumber: number;
+};

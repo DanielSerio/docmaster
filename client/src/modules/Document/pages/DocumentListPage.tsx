@@ -1,26 +1,26 @@
-import { Page } from "@/components/layout";
-import { useDocumentListQuery } from "@/modules/Document/hooks/document-list/useDocumentListQuery";
+import { Page } from '@/components/layout';
+import {
+  useDocumentListQuery,
+  useDocumentTableColumns
+} from '@/modules/Document/hooks/document-list';
+import { useDataTableRows } from '@/hooks/data-table';
+import { DataTable } from '@/components/data-table';
 
 export function DocumentListPage() {
   const listQuery = useDocumentListQuery();
+  const rows = useDataTableRows(listQuery.data);
+  const columnDefs = useDocumentTableColumns();
 
   return (
     <Page>
-      <div>
-        <h1>Document List</h1>
-        {listQuery.isPending && <div>Loading...</div>}
-        {listQuery.isError && <div>Error: {listQuery.error.message}</div>}
-        {listQuery.isSuccess && listQuery.data.length === 0 && (
-          <div>No documents found</div>
-        )}
-        {listQuery.isSuccess && listQuery.data.length > 0 && (
-          <ul>
-            {listQuery.data.map((document) => (
-              <li key={document.id}>{document.filename}</li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <DataTable
+        id="document-list"
+        rows={rows}
+        columnDefs={columnDefs}
+        getRowId={(row) => `${row.id}`}
+        isLoading={listQuery.isLoading}
+        error={listQuery.error as Error | null}
+      />
     </Page>
   );
 }
