@@ -1,6 +1,6 @@
-import type { AreaHTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 
-export interface PageProps extends Omit<AreaHTMLAttributes<HTMLAreaElement>, 'id'> { }
+export interface PageProps extends Omit<HTMLAttributes<HTMLAreaElement>, 'id'> { }
 
 export function Page({ children, ...props }: PageProps) {
   return (

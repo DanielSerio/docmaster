@@ -1,6 +1,6 @@
-import type { AreaHTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 
-export interface LayoutProps extends Omit<AreaHTMLAttributes<HTMLDivElement>, 'id'> { }
+export interface LayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'id'> { }
 
 export function Layout({ children, ...props }: LayoutProps) {
   return (

@@ -1,6 +1,6 @@
-import type { AreaHTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 
-export interface HeaderProps extends Omit<AreaHTMLAttributes<HTMLDivElement>, 'id'> { }
+export interface HeaderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'id'> { }
 
 export function Header({ children, ...props }: HeaderProps) {
   return (
