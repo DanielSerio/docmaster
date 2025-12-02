@@ -1,9 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
+import { DocumentBlocksPage } from '@/modules/Document/pages/DocumentBlocksPage';
 
 export const Route = createFileRoute('/documents/$id/blocks')({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <div>Hello "/documents/$id/blocks"!</div>
+  const { id } = Route.useParams();
+  return <DocumentBlocksPage id={id} />;
 }

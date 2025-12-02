@@ -1,9 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { DocumentRulesPage } from '@/modules/Document/pages/DocumentRulesPage';
 
 export const Route = createFileRoute('/documents/$id/rules')({
   component: RouteComponent,
 });
 
+
 function RouteComponent() {
-  return <div>Hello "/documents/$id/rules"!</div>;
-}
+  const { id } = Route.useParams();
+  return <DocumentRulesPage id={id} />;
+};
