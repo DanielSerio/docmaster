@@ -8,6 +8,7 @@ Feature: Server-Side Services Implementation
     Given the server is running with Prisma and PostgreSQL configured
     And the database schema is migrated
     And all tRPC procedures use Zod for input and output validation
+    And Zod schemas are defined in server/src/lib/schemas/
     And input validation errors return appropriate error messages
     And output validation ensures response structure matches schema
 

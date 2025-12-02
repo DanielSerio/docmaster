@@ -77,9 +77,28 @@ This can be done in a transaction or as separate operations since they're depend
 
 ## Zod Schema Definitions and Validation
 
+### Schema Location and Structure
+
+All Zod schemas are located in `server/src/lib/schemas/` and can be imported via the index file:
+
+```typescript
+import { ruleCategorySchema, createRuleCategoryInputSchema } from '../lib/schemas/index.js';
+```
+
+**Available Schema Files**:
+- `ruleCategory.schema.ts` - Rule category schemas
+- `rule.schema.ts` - Rule schemas with `ruleWithCategorySchema` for nested category data
+- `textBlock.schema.ts` - Text block schemas
+- `document.schema.ts` - Document schemas with timestamps and DocumentType enum
+- `documentRule.schema.ts` - Document-rule junction schemas with `documentRuleWithRuleSchema`
+- `documentTextBlock.schema.ts` - Document-text block junction schemas with `documentTextBlockWithTextBlockSchema`
+- `documentCollection.schema.ts` - Collection schemas with timestamps
+- `documentCollectionDocument.schema.ts` - Collection-document junction schemas with `documentCollectionDocumentWithDocumentSchema`
+- `index.ts` - Central export file
+
 ### Schema Organization
 
-Create separate schema files in `src/lib/schemas/` for each entity type. Each schema file should export:
+Each schema file exports the following pattern:
 
 1. **Input Schemas**: Validate data coming from the client
    - Create input schemas (e.g., `createRuleCategoryInput`)

@@ -2,17 +2,20 @@
 
 ## Zod Schema Definitions
 
-- [ ] Create `server/src/lib/schemas/` directory
-- [ ] Create shared Zod schemas for all entities
-  - [ ] Create `ruleCategory.schema.ts` with input and output schemas
-  - [ ] Create `rule.schema.ts` with input and output schemas
-  - [ ] Create `textBlock.schema.ts` with input and output schemas
-  - [ ] Create `document.schema.ts` with input and output schemas
-  - [ ] Create `documentRule.schema.ts` with input and output schemas
-  - [ ] Create `documentTextBlock.schema.ts` with input and output schemas
-  - [ ] Create `documentCollection.schema.ts` with input and output schemas
-  - [ ] Create `documentCollectionDocument.schema.ts` with input and output schemas
-- [ ] Create `server/src/lib/schemas/index.ts` to export all schemas
+✅ **COMPLETED**: All schema files have been created in `server/src/lib/schemas/`
+
+The following schemas are available and ready to use:
+- ✅ `ruleCategory.schema.ts` - Rule category input/output schemas
+- ✅ `rule.schema.ts` - Rule input/output schemas with category relations
+- ✅ `textBlock.schema.ts` - Text block input/output schemas
+- ✅ `document.schema.ts` - Document input/output schemas with timestamps
+- ✅ `documentRule.schema.ts` - Document-rule junction schemas
+- ✅ `documentTextBlock.schema.ts` - Document-text block junction schemas
+- ✅ `documentCollection.schema.ts` - Collection input/output schemas with timestamps
+- ✅ `documentCollectionDocument.schema.ts` - Collection-document junction schemas
+- ✅ `index.ts` - Central export file for all schemas
+
+**Import schemas from**: `server/src/lib/schemas/` or use the index: `import { ruleCategorySchema } from '../lib/schemas/index.js'`
 
 ## Service Layer Structure
 
