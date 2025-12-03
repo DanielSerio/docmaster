@@ -25,10 +25,10 @@ export function DTTableHeader<TData extends DTRowType>({
                 align={columnDef?.meta.align}
               >
                 {header.isPlaceholder ? null : (
-                  <div>
+                  <>
                     {flexRender(header.column.columnDef.header, header.getContext())}
                     {/* <SortButton header={header} /> */}
-                  </div>
+                  </>
                 )}
               </DTHead>
             );
