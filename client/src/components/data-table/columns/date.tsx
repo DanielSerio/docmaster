@@ -2,7 +2,7 @@ import { formatRelative } from 'date-fns';
 import type { DTColumnDef, DTRowType } from '../types';
 
 export function getDateColumn<
-  TData extends DTRowType & Record<'createdAt' | 'updatedAt', Date>,
+  TData extends DTRowType & Record<'createdAt' | 'updatedAt', string>,
   TValue
 >(id: 'createdAt' | 'updatedAt') {
   const headerText = id === 'createdAt' ? 'Created' : 'Updated';
