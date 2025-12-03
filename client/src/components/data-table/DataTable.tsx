@@ -18,9 +18,12 @@ export function DataTable<TData extends DTRowType>({
   emptyDescription,
   getRowId
 }: DataTableProps<TData>) {
+  // create column visibility state
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
     getInitialVisibilityState(columnDefs)
   );
+
+  // create table instance
   const table = useReactTable({
     data: rows,
     columns: columnDefs,
@@ -34,14 +37,16 @@ export function DataTable<TData extends DTRowType>({
     onColumnVisibilityChange: setColumnVisibility
   });
 
+  // get column definitions for visible columns
   const visibleColumnDefs = useMemo(() => {
     return columnDefs.filter((col) => columnVisibility[col.id]);
   }, [columnVisibility]);
 
+  // get grid template columns for visible columns
   const { gridTemplateColumns } = getTableGrid(visibleColumnDefs);
 
   return (
-    <div>
+    <div className="flex flex-col">
       <header>DataTable header area</header>
       <div>
         <Table>
