@@ -4,9 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npx prisma generate
 EXPOSE 3000
-CMD sh -c "npx prisma migrate deploy && npm run dev"
+CMD sh -c "npx prisma generate && npx prisma db push --accept-data-loss && npm run dev"
 
 # Build stage
 FROM node:20-alpine AS builder
@@ -27,4 +26,4 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/src/generated ./src/generated
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 EXPOSE 3000
-CMD sh -c "npx prisma migrate deploy && npm start"
+CMD sh -c "npx prisma generate && npx prisma migrate deploy && npm start"

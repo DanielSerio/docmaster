@@ -161,6 +161,16 @@ Key entities (see `docs/core/schema.dbml` for full schema):
 - Client-server communication uses tRPC
 - Create `useQuery` or `useMutation` hooks for all data fetching/mutation logic
 
+### Frontend Patterns
+**CRITICAL**: All data tables MUST follow the standardized four-step pattern:
+1. Fetch data with query hook
+2. Attach line numbers using `useDataTableRows`
+3. Define columns using column definition hook
+4. Pass to `<DataTable>`
+
+See `docs/core/frontend-architecture.md` for complete details and examples.
+Reference implementation: `client/src/modules/Document/pages/DocumentListPage.tsx`
+
 ## Development Principles
 
 ### TypeScript Standards
