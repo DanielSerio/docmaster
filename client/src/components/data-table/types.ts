@@ -59,6 +59,7 @@ export interface DataTableProps<TData extends DTRowType> {
   emptyIcon?: React.ReactNode;
   emptyTitle: string;
   emptyDescription: string;
+  children?: React.ReactNode;
 }
 
 export type DTRowRecord<TData extends object & RowData> = TData & {

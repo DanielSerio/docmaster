@@ -22,7 +22,17 @@ export function DocumentListPage() {
         emptyTitle="No Documents"
         emptyDescription="You haven't created any documents yet. Get started by creating your first document."
         error={listQuery.error as Error | null}
-      />
+      >
+        <DataTable.TitleBar>
+          <h1>Document Title Bar</h1>
+        </DataTable.TitleBar>
+        <DataTable.Filters>
+          <p>Filters will go here</p>
+        </DataTable.Filters>
+        <DataTable.Header>
+          <p>Header controls will go here</p>
+        </DataTable.Header>
+      </DataTable>
     </Page>
   );
 }
