@@ -21,7 +21,6 @@ export type DTColumnDef<TData extends DTRowType, TValue> = ColumnDef<TData, TVal
 
 interface DTSectionProps<TData extends DTRowType> {
   table: Table<TData>;
-  columnDefs: DTColumnDef<TData, unknown>[];
   gridTemplateColumns: string;
 }
 
@@ -33,6 +32,7 @@ export type DTBodyProps<TData extends DTRowType> = DTSectionProps<TData> & {
   emptyIcon?: React.ReactNode;
   emptyTitle: string;
   emptyDescription: string;
+  columnDefs: DTColumnDef<TData, unknown>[];
 };
 
 interface DTSubComponent extends PropsWithChildren {

@@ -1,14 +1,18 @@
+import { formatRelative } from 'date-fns';
 import type { DTColumnDef, DTRowType } from '../types';
 
-export function getDateColumn<TData extends DTRowType, TValue>(id: 'createdAt' | 'updatedAt') {
+export function getDateColumn<
+  TData extends DTRowType & Record<'createdAt' | 'updatedAt', Date>,
+  TValue
+>(id: 'createdAt' | 'updatedAt') {
   const headerText = id === 'createdAt' ? 'Created' : 'Updated';
   return {
     id,
     header: headerText,
     cell: ({ row }) => {
-      const date = (row.original as Record<string, unknown>)[id] as Date;
+      const date = row.original[id];
 
-      return date.toString();
+      return formatRelative(date, new Date());
     },
     meta: {
       size: {

@@ -6,7 +6,6 @@ import { flexRender } from '@tanstack/react-table';
 
 export function DTTableHeader<TData extends DTRowType>({
   table,
-  columnDefs,
   gridTemplateColumns
 }: DTHeaderProps<TData>) {
   return (
@@ -17,12 +16,10 @@ export function DTTableHeader<TData extends DTRowType>({
           gridTemplateColumns={gridTemplateColumns}
         >
           {headerGroup.headers.map((header) => {
-            const columnDef = columnDefs.find((def) => def.id === header.column.columnDef.id!);
-
             return (
               <DTHead
                 key={header.id}
-                align={columnDef?.meta.align}
+                align={header.column.columnDef.meta?.align}
               >
                 {header.isPlaceholder ? null : (
                   <>

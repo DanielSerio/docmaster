@@ -40,7 +40,7 @@ export function DataTable<TData extends DTRowType>({
   // get column definitions for visible columns
   const visibleColumnDefs = useMemo(() => {
     return columnDefs.filter((col) => columnVisibility[col.id]);
-  }, [columnVisibility]);
+  }, [columnVisibility, columnDefs]);
 
   // get grid template columns for visible columns
   const { gridTemplateColumns } = getTableGrid(visibleColumnDefs);
@@ -51,7 +51,6 @@ export function DataTable<TData extends DTRowType>({
       <div>
         <Table>
           <DTTableHeader
-            columnDefs={visibleColumnDefs}
             table={table}
             gridTemplateColumns={gridTemplateColumns}
           />
