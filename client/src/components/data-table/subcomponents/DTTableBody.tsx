@@ -4,6 +4,9 @@ import { DTRow } from './DTRow';
 import { DTCell } from './DTCell';
 import { flexRender } from '@tanstack/react-table';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Empty, EmptyDescription, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { AlertCircle, FolderCode } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export function DTTableBody<TData extends DTRowType>({
   table,
@@ -39,9 +42,19 @@ export function DTTableBody<TData extends DTRowType>({
   if (error) {
     return (
       <TableBody>
-        <DTRow gridTemplateColumns={'1fr'}>
-          <DTCell>
-            <p className="text-red-500">Error: {error.message}</p>
+        <DTRow
+          gridTemplateColumns={'1fr'}
+          className="bg-sidebar hover:bg-sidebar"
+        >
+          <DTCell className="border-b p-8">
+            <Alert
+              variant="destructive"
+              className="w-[fit-content] max-w-[640px] mx-auto bg-destructive/2 border-destructive/25"
+            >
+              <AlertCircle />
+              <AlertTitle>{error.name}</AlertTitle>
+              <AlertDescription>{error.message}</AlertDescription>
+            </Alert>
           </DTCell>
         </DTRow>
       </TableBody>
@@ -51,9 +64,21 @@ export function DTTableBody<TData extends DTRowType>({
   if (table.getRowModel().rows.length === 0) {
     return (
       <TableBody>
-        <DTRow gridTemplateColumns={'1fr'}>
-          <DTCell>
-            <p className="text-muted-foreground">No data available</p>
+        <DTRow
+          gridTemplateColumns={'1fr'}
+          className="bg-sidebar hover:bg-sidebar"
+        >
+          <DTCell className="border-b">
+            <Empty>
+              <EmptyMedia variant="icon">
+                <FolderCode />
+              </EmptyMedia>
+              <EmptyTitle>No Documents Yet</EmptyTitle>
+              <EmptyDescription>
+                You haven&apos;t created any documents yet. Get started by creating your first
+                document.
+              </EmptyDescription>
+            </Empty>
           </DTCell>
         </DTRow>
       </TableBody>
