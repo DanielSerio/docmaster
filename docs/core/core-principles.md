@@ -36,6 +36,13 @@
    - `src/services`: (example path: `src/services/[serviceName]/index.ts`)
    - `src/types`: (example path: `src/types/[featureName]/index.ts`)
 
+2. **CRITICAL**: All data tables MUST follow the standardized four-step pattern documented in [docs/core/frontend-architecture.md](./frontend-architecture.md):
+   - Step 1: Fetch data with query hook
+   - Step 2: Attach line numbers using `useDataTableRows`
+   - Step 3: Define columns using column definition hook
+   - Step 4: Pass to `<DataTable>`
+   - Reference: `client/src/modules/Document/pages/DocumentListPage.tsx`
+
 ## Document Management
 
 1. Never put code examples or implementation details in the `specs` or `tasks` documents. This is the job of the `impl` documents.

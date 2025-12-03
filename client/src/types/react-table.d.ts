@@ -5,5 +5,6 @@ declare module '@tanstack/react-table' {
   interface ColumnMeta<TData extends DTRowData, TValue> {
     size: ColumnSize;
     align?: ColumnAlignment;
+    defaultHidden?: boolean;
   }
 }

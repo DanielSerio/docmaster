@@ -25,7 +25,7 @@ export function useDocumentTableColumns() {
         meta: {
           size: {
             min: 200,
-            max: 200
+            max: 400
           }
         }
       },
@@ -36,7 +36,7 @@ export function useDocumentTableColumns() {
         meta: {
           size: {
             min: 150,
-            max: 150
+            max: 250
           }
         }
       },
@@ -47,7 +47,7 @@ export function useDocumentTableColumns() {
         meta: {
           size: {
             min: 150,
-            max: 150
+            max: 250
           }
         }
       }

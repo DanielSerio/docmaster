@@ -10,10 +10,10 @@ export function DTTableBody<TData extends DTRowType>({
   gridTemplateColumns,
   skeletonRowCount,
   isLoading,
-  error
+  error,
+  columnDefs
 }: DTBodyProps<TData>) {
-  const visibleColumns = Object.values(table.getState().columnVisibility).filter((v) => v);
-
+  console.log(columnDefs);
   if (isLoading) {
     return (
       <TableBody>
@@ -22,12 +22,12 @@ export function DTTableBody<TData extends DTRowType>({
             key={index}
             gridTemplateColumns={gridTemplateColumns}
           >
-            {Array.from({ length: visibleColumns.length }).map((_, cellIndex) => (
+            {Array.from({ length: columnDefs.length }).map((_, cellIndex) => (
               <DTCell
                 key={cellIndex}
                 align="left"
               >
-                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-full m-2" />
               </DTCell>
             ))}
           </DTRow>
@@ -42,6 +42,18 @@ export function DTTableBody<TData extends DTRowType>({
         <DTRow gridTemplateColumns={'1fr'}>
           <DTCell>
             <p className="text-red-500">Error: {error.message}</p>
+          </DTCell>
+        </DTRow>
+      </TableBody>
+    );
+  }
+
+  if (table.getRowModel().rows.length === 0) {
+    return (
+      <TableBody>
+        <DTRow gridTemplateColumns={'1fr'}>
+          <DTCell>
+            <p className="text-muted-foreground">No data available</p>
           </DTCell>
         </DTRow>
       </TableBody>

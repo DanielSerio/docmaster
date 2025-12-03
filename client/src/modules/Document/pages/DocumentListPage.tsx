@@ -18,7 +18,7 @@ export function DocumentListPage() {
         rows={rows}
         columnDefs={columnDefs}
         getRowId={(row) => `${row.id}`}
-        isLoading={listQuery.isLoading}
+        isLoading={listQuery.isLoading || true}
         error={listQuery.error as Error | null}
       />
     </Page>

@@ -1,8 +1,10 @@
-import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { getCoreRowModel, useReactTable, type VisibilityState } from '@tanstack/react-table';
 import { Table } from '../ui/table';
 import { DTTableHeader } from './subcomponents/DTTableHeader';
 import { DTTableBody } from './subcomponents/DTTableBody';
 import type { DataTableProps, DTRowType } from './types';
+import { useMemo, useState } from 'react';
+import { getInitialVisibilityState, getTableGrid } from './utils';
 
 export function DataTable<TData extends DTRowType>({
   id,
@@ -13,16 +15,27 @@ export function DataTable<TData extends DTRowType>({
   error,
   getRowId
 }: DataTableProps<TData>) {
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    getInitialVisibilityState(columnDefs)
+  );
   const table = useReactTable({
     data: rows,
     columns: columnDefs,
-    getCoreRowModel: getCoreRowModel(),
     getRowId(originalRow) {
       return `${id}-${getRowId(originalRow)}`;
-    }
+    },
+    getCoreRowModel: getCoreRowModel(),
+    state: {
+      columnVisibility
+    },
+    onColumnVisibilityChange: setColumnVisibility
   });
 
-  const gridTemplateColumns = columnDefs.map((col) => col.meta.size.min + 'px').join(' ');
+  const visibleColumnDefs = useMemo(() => {
+    return columnDefs.filter((col) => columnVisibility[col.id]);
+  }, [columnVisibility]);
+
+  const { gridTemplateColumns } = getTableGrid(visibleColumnDefs);
 
   return (
     <div>
@@ -30,12 +43,12 @@ export function DataTable<TData extends DTRowType>({
       <div>
         <Table>
           <DTTableHeader
-            columnDefs={columnDefs}
+            columnDefs={visibleColumnDefs}
             table={table}
             gridTemplateColumns={gridTemplateColumns}
           />
           <DTTableBody
-            columnDefs={columnDefs}
+            columnDefs={visibleColumnDefs}
             table={table}
             gridTemplateColumns={gridTemplateColumns}
             isLoading={isLoading}
