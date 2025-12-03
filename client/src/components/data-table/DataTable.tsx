@@ -13,6 +13,9 @@ export function DataTable<TData extends DTRowType>({
   skeletonRowCount = 5,
   isLoading,
   error,
+  emptyIcon,
+  emptyTitle,
+  emptyDescription,
   getRowId
 }: DataTableProps<TData>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -54,6 +57,9 @@ export function DataTable<TData extends DTRowType>({
             isLoading={isLoading}
             error={error}
             skeletonRowCount={skeletonRowCount}
+            emptyIcon={emptyIcon}
+            emptyTitle={emptyTitle}
+            emptyDescription={emptyDescription}
           />
         </Table>
       </div>

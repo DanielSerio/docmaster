@@ -3,10 +3,9 @@ import { TableBody } from '@/components/ui/table';
 import { DTRow } from './DTRow';
 import { DTCell } from './DTCell';
 import { flexRender } from '@tanstack/react-table';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Empty, EmptyDescription, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { AlertCircle, FolderCode } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { DTTableSkeleton } from './DTTableSkeleton';
+import { DTTableError } from './DTTableError';
+import { DTTableEmpty } from './DTTableEmpty';
 
 export function DTTableBody<TData extends DTRowType>({
   table,
@@ -14,74 +13,35 @@ export function DTTableBody<TData extends DTRowType>({
   skeletonRowCount,
   isLoading,
   error,
-  columnDefs
+  columnDefs,
+  emptyIcon,
+  emptyTitle,
+  emptyDescription
 }: DTBodyProps<TData>) {
-  console.log(columnDefs);
+  // Loading
   if (isLoading) {
     return (
-      <TableBody>
-        {Array.from({ length: skeletonRowCount }).map((_, index) => (
-          <DTRow
-            key={index}
-            gridTemplateColumns={gridTemplateColumns}
-          >
-            {Array.from({ length: columnDefs.length }).map((_, cellIndex) => (
-              <DTCell
-                key={cellIndex}
-                align="left"
-              >
-                <Skeleton className="h-4 w-full m-2" />
-              </DTCell>
-            ))}
-          </DTRow>
-        ))}
-      </TableBody>
+      <DTTableSkeleton
+        skeletonRowCount={skeletonRowCount}
+        gridTemplateColumns={gridTemplateColumns}
+        columnCount={columnDefs.length}
+      />
     );
   }
 
+  // Error
   if (error) {
-    return (
-      <TableBody>
-        <DTRow
-          gridTemplateColumns={'1fr'}
-          className="bg-sidebar hover:bg-sidebar"
-        >
-          <DTCell className="border-b p-8">
-            <Alert
-              variant="destructive"
-              className="w-[fit-content] max-w-[640px] mx-auto bg-destructive/2 border-destructive/25"
-            >
-              <AlertCircle />
-              <AlertTitle>{error.name}</AlertTitle>
-              <AlertDescription>{error.message}</AlertDescription>
-            </Alert>
-          </DTCell>
-        </DTRow>
-      </TableBody>
-    );
+    return <DTTableError error={error} />;
   }
 
+  // No Data
   if (table.getRowModel().rows.length === 0) {
     return (
-      <TableBody>
-        <DTRow
-          gridTemplateColumns={'1fr'}
-          className="bg-sidebar hover:bg-sidebar"
-        >
-          <DTCell className="border-b">
-            <Empty>
-              <EmptyMedia variant="icon">
-                <FolderCode />
-              </EmptyMedia>
-              <EmptyTitle>No Documents Yet</EmptyTitle>
-              <EmptyDescription>
-                You haven&apos;t created any documents yet. Get started by creating your first
-                document.
-              </EmptyDescription>
-            </Empty>
-          </DTCell>
-        </DTRow>
-      </TableBody>
+      <DTTableEmpty
+        icon={emptyIcon}
+        title={emptyTitle}
+        description={emptyDescription}
+      />
     );
   }
 

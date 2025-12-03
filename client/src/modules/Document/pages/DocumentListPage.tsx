@@ -1,20 +1,10 @@
 import { Page } from '@/components/layout';
+import { DataTable } from '@/components/data-table';
+import { useDataTableRows } from '@/hooks/data-table';
 import {
   useDocumentListQuery,
   useDocumentTableColumns
 } from '@/modules/Document/hooks/document-list';
-import { useDataTableRows } from '@/hooks/data-table';
-import { DataTable } from '@/components/data-table';
-
-const createTestError = () => {
-  const error = new Error(
-    `Very long error message text that might be truncated or shown in a tooltip`
-  );
-  error.name = 'ReallyReallyLongTestErrorName';
-  return error;
-};
-
-const err = createTestError();
 
 export function DocumentListPage() {
   const listQuery = useDocumentListQuery();
@@ -29,8 +19,9 @@ export function DocumentListPage() {
         columnDefs={columnDefs}
         getRowId={(row) => `${row.id}`}
         isLoading={listQuery.isLoading}
-        // error={listQuery.error as Error | null}
-        error={err}
+        emptyTitle="No Documents"
+        emptyDescription="You haven't created any documents yet. Get started by creating your first document."
+        error={listQuery.error as Error | null}
       />
     </Page>
   );

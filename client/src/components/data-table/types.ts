@@ -30,6 +30,9 @@ export type DTBodyProps<TData extends DTRowType> = DTSectionProps<TData> & {
   isLoading?: boolean | null;
   error?: Error | null;
   skeletonRowCount: number;
+  emptyIcon?: React.ReactNode;
+  emptyTitle: string;
+  emptyDescription: string;
 };
 
 interface DTSubComponent extends PropsWithChildren {
@@ -53,6 +56,9 @@ export interface DataTableProps<TData extends DTRowType> {
   isLoading?: boolean | null;
   error?: Error | null;
   skeletonRowCount?: number;
+  emptyIcon?: React.ReactNode;
+  emptyTitle: string;
+  emptyDescription: string;
 }
 
 export type DTRowRecord<TData extends object & RowData> = TData & {
