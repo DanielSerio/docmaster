@@ -1,3 +1,4 @@
+import type { PagingController } from "@/hooks/data-table";
 import type { ColumnDef, ColumnMeta, RowData, Table } from "@tanstack/react-table";
 import type { PropsWithChildren } from "react";
 
@@ -60,6 +61,7 @@ export interface DataTableProps<TData extends DTRowType> {
   emptyTitle: string;
   emptyDescription: string;
   children?: React.ReactNode;
+  pagingController: PagingController;
 }
 
 export type DTRowRecord<TData extends object & RowData> = TData & {

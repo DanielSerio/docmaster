@@ -1,14 +1,18 @@
 import { Page } from '@/components/layout';
 import { DataTable } from '@/components/data-table';
-import { useDataTableRows } from '@/hooks/data-table';
+import { useDataTablePaging, useDataTableRows } from '@/hooks/data-table';
 import {
   useDocumentListQuery,
   useDocumentTableColumns
 } from '@/modules/Document/hooks/document-list';
+import { Button } from '@/components/ui/button';
+import { PlusIcon } from 'lucide-react';
 
 export function DocumentListPage() {
-  const listQuery = useDocumentListQuery();
-  const rows = useDataTableRows(listQuery.data);
+  const pagingController = useDataTablePaging();
+  const [pagination] = pagingController;
+  const listQuery = useDocumentListQuery(pagination);
+  const rows = useDataTableRows(listQuery.data?.results);
   const columnDefs = useDocumentTableColumns();
 
   return (
@@ -22,16 +26,24 @@ export function DocumentListPage() {
         emptyTitle="No Documents"
         emptyDescription="You haven't created any documents yet. Get started by creating your first document."
         error={listQuery.error as Error | null}
+        pagingController={pagingController}
       >
         <DataTable.TitleBar>
-          <h1>Document Title Bar</h1>
+          <div className="flex items-center justify-between py-2">
+            <h1 className="text-xl font-medium">Documents</h1>
+            <Button
+              className="cursor-pointer"
+              variant="default"
+              size="sm"
+            >
+              <span>Create Document</span>
+              <PlusIcon />
+            </Button>
+          </div>
         </DataTable.TitleBar>
         <DataTable.Filters>
           <p>Filters will go here</p>
         </DataTable.Filters>
-        <DataTable.Header>
-          <p>Header controls will go here</p>
-        </DataTable.Header>
       </DataTable>
     </Page>
   );

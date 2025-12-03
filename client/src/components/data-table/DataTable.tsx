@@ -22,7 +22,8 @@ function DataTableRoot<TData extends DTRowType>({
   emptyTitle,
   emptyDescription,
   getRowId,
-  children
+  children,
+  pagingController
 }: DataTableProps<TData>) {
   // create column visibility state
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -99,7 +100,7 @@ function DataTableRoot<TData extends DTRowType>({
             />
           </Table>
         </div>
-        <DTPagination />
+        <DTPagination controller={pagingController} />
       </div>
     </DataTableProvider>
   );
