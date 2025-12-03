@@ -9,6 +9,7 @@ import type { DataTableProps, DTRowType } from './types';
 import { Children, isValidElement, useMemo, useState } from 'react';
 import { getInitialVisibilityState, getTableGrid } from './utils';
 import { DataTableProvider } from './DataTableContext';
+import { DTPagination } from './subcomponents/DTPagination';
 
 function DataTableRoot<TData extends DTRowType>({
   id,
@@ -73,13 +74,13 @@ function DataTableRoot<TData extends DTRowType>({
 
   return (
     <DataTableProvider value={{ table, gridTemplateColumns }}>
-      <div className="flex flex-col">
+      <div className="flex flex-col border rounded-md bg-card max-h-[calc(100vh-88px)] 2xl:max-h-[calc(100vh-120px)]">
         <header className="flex flex-col">
           {slots.titleBar}
           {slots.filters}
           {slots.header}
         </header>
-        <div>
+        <div className="flex-1 overflow-y-auto">
           <Table>
             <DTTableHeader
               table={table}
@@ -98,9 +99,7 @@ function DataTableRoot<TData extends DTRowType>({
             />
           </Table>
         </div>
-        <footer>
-          <button>Pagination area</button>
-        </footer>
+        <DTPagination />
       </div>
     </DataTableProvider>
   );
