@@ -47,12 +47,17 @@ export const buildDocumentFiltersWhere = (filters?: ColumnFilter[]): Prisma.Docu
         // Handle date range filter (supports partial ranges)
         if (filter.value && typeof filter.value === 'object') {
           const range = filter.value as { from?: string; to?: string };
-          where.createdAt = {};
+          const createdAt: { gte?: Date; lte?: Date } = {};
           if (range.from) {
-            where.createdAt.gte = new Date(range.from);
+            const d = new Date(range.from);
+            if (!isNaN(d.getTime())) createdAt.gte = d;
           }
           if (range.to) {
-            where.createdAt.lte = new Date(range.to);
+            const d = new Date(range.to);
+            if (!isNaN(d.getTime())) createdAt.lte = d;
+          }
+          if (createdAt.gte || createdAt.lte) {
+            where.createdAt = createdAt;
           }
         }
         break;
