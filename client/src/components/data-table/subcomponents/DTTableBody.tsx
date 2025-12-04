@@ -46,7 +46,7 @@ export function DTTableBody<TData extends DTRowType>({
   }
 
   return (
-    <TableBody>
+    <TableBody className="divide-y divide-gray-200 [&>tr]:last:border-b">
       {table.getRowModel().rows.map((row) => (
         <DTRow
           key={row.id}

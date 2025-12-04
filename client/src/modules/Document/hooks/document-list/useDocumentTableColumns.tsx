@@ -3,6 +3,7 @@ import type { DTColumnDef, DTRowRecord } from '@/components/data-table';
 import type { DocumentRecord } from './useDocumentListQuery';
 import { getLineNumberColumn } from '@/components/data-table/columns';
 import { getDateColumn } from '@/components/data-table/columns/date';
+import { Link } from '@tanstack/react-router';
 
 export function useDocumentTableColumns() {
   const lineNumber = getLineNumberColumn<DTRowRecord<DocumentRecord>, unknown>();
@@ -27,6 +28,18 @@ export function useDocumentTableColumns() {
         id: 'filename',
         accessorKey: 'filename',
         header: 'Filename',
+        cell: ({ row }) => {
+          const { filename, id } = row.original;
+          return (
+            <Link
+              className="text-primary hover:underline"
+              to={`/documents/$id`}
+              params={{ id: `${id}` }}
+            >
+              {filename}
+            </Link>
+          );
+        },
         meta: {
           size: {
             min: 200,

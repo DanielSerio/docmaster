@@ -7,6 +7,7 @@ import {
 } from '@/modules/Document/hooks/document-list';
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 
 export function DocumentListPage() {
   const pagingController = useDataTablePaging();
@@ -32,12 +33,15 @@ export function DocumentListPage() {
           <div className="flex items-center justify-between py-2">
             <h1 className="text-xl font-medium">Documents</h1>
             <Button
+              asChild
               className="cursor-pointer"
               variant="default"
               size="sm"
             >
-              <span>Create Document</span>
-              <PlusIcon />
+              <Link to="/documents/new">
+                <span>Create Document</span>
+                <PlusIcon />
+              </Link>
             </Button>
           </div>
         </DataTable.TitleBar>
