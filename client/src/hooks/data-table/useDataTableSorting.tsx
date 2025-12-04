@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import type { SortingState } from '@tanstack/react-table';
 
 interface UseDataTableSortingOptions {
@@ -7,8 +7,6 @@ interface UseDataTableSortingOptions {
 
 export function useDataTableSorting(options?: UseDataTableSortingOptions) {
   const [sorting, setSorting] = useState<SortingState>(options?.defaultSorting || []);
-  const sortingRef = useRef(sorting);
-  sortingRef.current = sorting;
 
   const toggleSort = useCallback((columnId: string, isMultiSort: boolean = false) => {
     setSorting((prev) => {
@@ -40,18 +38,11 @@ export function useDataTableSorting(options?: UseDataTableSortingOptions) {
     setSorting([]);
   }, []);
 
-  const getSortForColumn = useCallback((columnId: string): 'asc' | 'desc' | false => {
-    const sort = sortingRef.current.find((s) => s.id === columnId);
-    if (!sort) return false;
-    return sort.desc ? 'desc' : 'asc';
-  }, []);
-
   const methods = useMemo(() => ({
     toggleSort,
     clearSort,
-    clearAllSorts,
-    getSortForColumn
-  }), [toggleSort, clearSort, clearAllSorts, getSortForColumn]);
+    clearAllSorts
+  }), [toggleSort, clearSort, clearAllSorts]);
 
   return useMemo(() => [sorting, setSorting, methods] as const, [sorting, methods]);
 }

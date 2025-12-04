@@ -134,7 +134,7 @@ const buildSortingOrderBy = (sorting?: ColumnSort[]): Record<string, 'asc' | 'de
     return { id: "asc" };
   }
 
-  // Map column IDs to database field names
+  // Map column IDs to database field names (only valid fields)
   const fieldMap: Record<string, string> = {
     'filename': 'filename',
     'documentType': 'documentType',
@@ -142,17 +142,23 @@ const buildSortingOrderBy = (sorting?: ColumnSort[]): Record<string, 'asc' | 'de
     'updatedAt': 'updatedAt'
   };
 
-  if (sorting.length === 1) {
-    const sort = sorting[0];
-    if (!sort) return { id: "asc" };
-    const field = fieldMap[sort.id] || sort.id;
+  // Filter to only include valid fields to prevent server crashes
+  const validSorts = sorting.filter(sort => fieldMap[sort.id] !== undefined);
+
+  if (validSorts.length === 0) {
+    return { id: "asc" };
+  }
+
+  if (validSorts.length === 1) {
+    const sort = validSorts[0];
+    const field = fieldMap[sort.id];
     return { [field]: sort.desc ? 'desc' : 'asc' };
   }
 
   // Multi-column sorting
-  return sorting.map(sort => {
-    const field = fieldMap[sort.id] || sort.id;
-    return { [field]: sort.desc ? 'desc' : 'asc' };
+  return validSorts.map(sort => {
+    const field = fieldMap[sort.id];
+    return { [field]: sort.desc ? 'desc' : 'asc' } as Record<string, 'asc' | 'desc'>;
   });
 };
 
