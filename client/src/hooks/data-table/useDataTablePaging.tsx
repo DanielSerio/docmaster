@@ -26,7 +26,7 @@ export function useDataTablePaging(paging?: PagingType) {
   const prevPage = () =>
     setPagination((prev) => ({
       ...prev,
-      offset: prev.offset > prev.limit ? prev.offset - prev.limit : 0
+      offset: Math.max(0, prev.offset - prev.limit)
     }));
 
   const nextPage = () =>
