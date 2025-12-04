@@ -24,7 +24,8 @@ function DataTableRoot<TData extends DTRowType>({
   getRowId,
   children,
   pagingController,
-  filteringController
+  filteringController,
+  sortingController
 }: DataTableProps<TData>) {
   // create column visibility state
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() =>
@@ -44,10 +45,15 @@ function DataTableRoot<TData extends DTRowType>({
     columns: columnDefs,
     getRowId: getRowIdCallback,
     getCoreRowModel: getCoreRowModel(),
+    manualSorting: true,
+    enableSorting: true,
+    enableMultiSort: true,
     state: {
-      columnVisibility
+      columnVisibility,
+      sorting: sortingController?.[0] || []
     },
-    onColumnVisibilityChange: setColumnVisibility
+    onColumnVisibilityChange: setColumnVisibility,
+    onSortingChange: sortingController?.[1]
   });
 
   // get column definitions for visible columns
@@ -83,8 +89,9 @@ function DataTableRoot<TData extends DTRowType>({
   const contextValue = useMemo(() => ({
     table,
     gridTemplateColumns,
-    filteringController
-  }), [table, gridTemplateColumns, filteringController]);
+    filteringController,
+    sortingController
+  }), [table, gridTemplateColumns, filteringController, sortingController]);
 
   return (
     <DataTableProvider value={contextValue}>

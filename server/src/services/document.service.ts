@@ -56,6 +56,11 @@ interface ColumnFilter {
   value: unknown;
 }
 
+interface ColumnSort {
+  id: string;
+  desc: boolean;
+}
+
 const buildFiltersWhere = (filters?: ColumnFilter[]): Prisma.DocumentWhereInput => {
   if (!filters || filters.length === 0) {
     return {};
@@ -124,20 +129,50 @@ const buildFiltersWhere = (filters?: ColumnFilter[]): Prisma.DocumentWhereInput 
   return where;
 };
 
+const buildSortingOrderBy = (sorting?: ColumnSort[]): Record<string, 'asc' | 'desc'>[] | Record<string, 'asc' | 'desc'> => {
+  if (!sorting || sorting.length === 0) {
+    return { id: "asc" };
+  }
+
+  // Map column IDs to database field names
+  const fieldMap: Record<string, string> = {
+    'filename': 'filename',
+    'documentType': 'documentType',
+    'createdAt': 'createdAt',
+    'updatedAt': 'updatedAt'
+  };
+
+  if (sorting.length === 1) {
+    const sort = sorting[0];
+    if (!sort) return { id: "asc" };
+    const field = fieldMap[sort.id] || sort.id;
+    return { [field]: sort.desc ? 'desc' : 'asc' };
+  }
+
+  // Multi-column sorting
+  return sorting.map(sort => {
+    const field = fieldMap[sort.id] || sort.id;
+    return { [field]: sort.desc ? 'desc' : 'asc' };
+  });
+};
+
 const getAllDocumentsImpl = async ({
   offset,
   limit,
-  filters
+  filters,
+  sorting
 }: {
   offset: number;
   limit: number;
   filters?: ColumnFilter[];
+  sorting?: ColumnSort[];
 }) => {
   const where = buildFiltersWhere(filters);
+  const orderBy = buildSortingOrderBy(sorting);
 
   const results = await prisma.document.findMany({
     where,
-    orderBy: { id: "asc" },
+    orderBy,
     skip: offset,
     take: limit,
   });

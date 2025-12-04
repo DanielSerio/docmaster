@@ -1,4 +1,4 @@
-import type { PagingController, FilteringController } from "@/hooks/data-table";
+import type { PagingController, FilteringController, SortingController } from "@/hooks/data-table";
 import type { ColumnDef, ColumnMeta, RowData, Table } from "@tanstack/react-table";
 import type { PropsWithChildren } from "react";
 
@@ -45,6 +45,7 @@ export interface DTRowProps extends DTSubComponent {
 
 export interface DTCellProps extends DTSubComponent {
   align?: ColumnAlignment;
+  onClick?: (event: React.MouseEvent) => void;
 }
 
 
@@ -61,6 +62,7 @@ export interface DataTableProps<TData extends DTRowType> {
   children?: React.ReactNode;
   pagingController: PagingController;
   filteringController?: FilteringController;
+  sortingController?: SortingController;
 }
 
 export type DTRowRecord<TData extends object & RowData> = TData & {

@@ -24,6 +24,10 @@ export const documentRouter = router({
       filters: z.array(z.object({
         id: z.string(),
         value: z.unknown()
+      })).optional(),
+      sorting: z.array(z.object({
+        id: z.string(),
+        desc: z.boolean()
       })).optional()
     }))
     .output(z.object({
@@ -41,7 +45,8 @@ export const documentRouter = router({
       return await documentService.getAllDocuments({
         offset: input.offset,
         limit: input.limit,
-        filters: input.filters
+        filters: input.filters,
+        sorting: input.sorting
       });
     }),
 

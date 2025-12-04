@@ -29,7 +29,8 @@ export function useDocumentTableColumns() {
               { label: 'General', value: 'general' },
               { label: 'Rule', value: 'rule' }
             ]
-          }
+          },
+          sortable: true
         }
       },
       {
@@ -57,7 +58,8 @@ export function useDocumentTableColumns() {
             type: 'search',
             label: 'Filename',
             placeholder: 'Search filenames...'
-          }
+          },
+          sortable: true
         }
       },
       {
@@ -67,10 +69,17 @@ export function useDocumentTableColumns() {
           filter: {
             type: 'date-range',
             label: 'Created'
-          }
+          },
+          sortable: true
         }
       },
-      updatedAt
+      {
+        ...updatedAt,
+        meta: {
+          ...updatedAt.meta,
+          sortable: true
+        }
+      }
     ] satisfies DTColumnDef<DTRowRecord<DocumentRecord>, unknown>[];
   }, []);
 }

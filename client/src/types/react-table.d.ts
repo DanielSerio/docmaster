@@ -8,5 +8,9 @@ declare module '@tanstack/react-table' {
     align?: ColumnAlignment;
     defaultHidden?: boolean;
     filter?: DTMetaFilter;
+    sortable?: boolean | {
+      defaultDirection?: 'asc' | 'desc';
+      fieldName?: string;
+    };
   }
 }
