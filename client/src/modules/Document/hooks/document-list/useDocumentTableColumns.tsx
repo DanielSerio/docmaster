@@ -6,11 +6,11 @@ import { getDateColumn } from '@/components/data-table/columns/date';
 import { Link } from '@tanstack/react-router';
 
 export function useDocumentTableColumns() {
-  const lineNumber = getLineNumberColumn<DTRowRecord<DocumentRecord>, unknown>();
-  const createdAt = getDateColumn<DTRowRecord<DocumentRecord>, unknown>('createdAt');
-  const updatedAt = getDateColumn<DTRowRecord<DocumentRecord>, unknown>('updatedAt');
-
   return useMemo(() => {
+    const lineNumber = getLineNumberColumn<DTRowRecord<DocumentRecord>, unknown>();
+    const createdAt = getDateColumn<DTRowRecord<DocumentRecord>, unknown>('createdAt');
+    const updatedAt = getDateColumn<DTRowRecord<DocumentRecord>, unknown>('updatedAt');
+
     return [
       lineNumber,
       {
@@ -21,6 +21,14 @@ export function useDocumentTableColumns() {
           size: {
             min: 200,
             max: 400
+          },
+          filter: {
+            type: 'select',
+            label: 'Type',
+            options: [
+              { label: 'General', value: 'general' },
+              { label: 'Rule', value: 'rule' }
+            ]
           }
         }
       },
@@ -44,10 +52,24 @@ export function useDocumentTableColumns() {
           size: {
             min: 200,
             max: 400
+          },
+          filter: {
+            type: 'search',
+            label: 'Filename',
+            placeholder: 'Search filenames...'
           }
         }
       },
-      createdAt,
+      {
+        ...createdAt,
+        meta: {
+          ...createdAt.meta,
+          filter: {
+            type: 'date-range',
+            label: 'Created'
+          }
+        }
+      },
       updatedAt
     ] satisfies DTColumnDef<DTRowRecord<DocumentRecord>, unknown>[];
   }, []);

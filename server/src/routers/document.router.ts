@@ -21,6 +21,10 @@ export const documentRouter = router({
     .input(z.object({
       offset: z.number().default(0),
       limit: z.number().default(10),
+      filters: z.array(z.object({
+        id: z.string(),
+        value: z.unknown()
+      })).optional()
     }))
     .output(z.object({
       paging: z.object({
@@ -37,6 +41,7 @@ export const documentRouter = router({
       return await documentService.getAllDocuments({
         offset: input.offset,
         limit: input.limit,
+        filters: input.filters
       });
     }),
 

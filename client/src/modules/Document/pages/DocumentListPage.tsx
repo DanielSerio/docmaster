@@ -1,6 +1,6 @@
 import { Page } from '@/components/layout';
 import { DataTable } from '@/components/data-table';
-import { useDataTablePaging, useDataTableRows } from '@/hooks/data-table';
+import { useDataTablePaging, useDataTableRows, useDataTableFiltering } from '@/hooks/data-table';
 import {
   useDocumentListQuery,
   useDocumentTableColumns
@@ -14,7 +14,9 @@ export function DocumentListPage() {
   const { setError } = useError();
   const pagingController = useDataTablePaging();
   const [pagination, { setTotalPages }] = pagingController;
-  const listQuery = useDocumentListQuery(pagination, setError, setTotalPages);
+  const filteringController = useDataTableFiltering();
+  const [columnFilters] = filteringController;
+  const listQuery = useDocumentListQuery(pagination, setError, setTotalPages, columnFilters);
   const rows = useDataTableRows(listQuery.data?.results);
   const columnDefs = useDocumentTableColumns();
 
@@ -29,6 +31,7 @@ export function DocumentListPage() {
         emptyTitle="No Documents"
         emptyDescription="You haven't created any documents yet. Get started by creating your first document."
         pagingController={pagingController}
+        filteringController={filteringController}
       >
         <DataTable.TitleBar>
           <div className="flex items-center justify-between py-2">
@@ -47,7 +50,7 @@ export function DocumentListPage() {
           </div>
         </DataTable.TitleBar>
         <DataTable.Filters>
-          <p>Filters will go here</p>
+          <DataTable.Filter />
         </DataTable.Filters>
       </DataTable>
     </Page>

@@ -2,58 +2,58 @@
 
 ## Core Infrastructure
 
-- [ ] Create `useDataTableFiltering` hook in `client/src/hooks/data-table/`
-- [ ] Add `FilteringController` type export
-- [ ] Update `client/src/hooks/data-table/index.ts` to export filtering hook
-- [ ] Extend column meta type to include `filter` property
-- [ ] Update `DataTableProps` to accept optional `filteringController`
-- [ ] Update `DataTable.tsx` to enable `manualFiltering` mode
-- [ ] Update `DataTable.tsx` to pass `columnFilters` state to table instance
+- [x] Create `useDataTableFiltering` hook in `client/src/hooks/data-table/`
+- [x] Add `FilteringController` type export
+- [x] Update `client/src/hooks/data-table/index.ts` to export filtering hook
+- [x] Extend column meta type to include `filter` property
+- [x] Update `DataTableProps` to accept optional `filteringController`
+- [x] Update `DataTable.tsx` to enable `manualFiltering` mode
+- [x] Update `DataTable.tsx` to pass `columnFilters` state to table instance
 
 ## Filter UI Components
 
-- [ ] Create `client/src/components/data-table/filters/` directory
-- [ ] Create base `DTFilterProps` interface in `filters/types.ts`
-- [ ] Implement `DTFilterSearch` component (search input with icon)
-- [ ] Implement `DTFilterSelect` component (single select dropdown)
-- [ ] Implement `DTFilterMultiSelect` component (multi-select with badges)
-- [ ] Implement `DTFilterDateRange` component (date range picker with calendar)
-- [ ] Implement `DTFilterNumberRange` component (min/max number inputs)
-- [ ] Create `client/src/components/data-table/filters/index.ts` barrel export
+- [x] Create `client/src/components/data-table/filters/` directory
+- [x] Create base `DTFilterProps` interface in `filters/types.ts`
+- [x] Implement `DTFilterSearch` component (search input with icon)
+- [x] Implement `DTFilterSelect` component (single select dropdown)
+- [x] Implement `DTFilterMultiSelect` component (multi-select with badges)
+- [x] Implement `DTFilterDateRange` component (date range picker with calendar)
+- [x] Implement `DTFilterNumberRange` component (min/max number inputs)
+- [x] Create `client/src/components/data-table/filters/index.ts` barrel export
 
 ## Filter Orchestrator
 
-- [ ] Create `DTFilter` component in `client/src/components/data-table/subcomponents/`
-- [ ] Implement logic to extract filterable columns from table
-- [ ] Implement filter component selection based on filter type
-- [ ] Add column labels above each filter control
-- [ ] Add "Clear All" button that appears when filters are active
-- [ ] Update `DataTable` export to include `Filter` compound component
+- [x] Create `DTFilter` component in `client/src/components/data-table/subcomponents/`
+- [x] Implement logic to extract filterable columns from table
+- [x] Implement filter component selection based on filter type
+- [x] Add column labels above each filter control
+- [x] Add "Clear All" button that appears when filters are active
+- [x] Update `DataTable` export to include `Filter` compound component
 
 ## API Integration
 
-- [ ] Update `useDocumentListQuery` to accept `filters` parameter
-- [ ] Pass `filters` directly to tRPC query (no serialization needed)
+- [x] Update `useDocumentListQuery` to accept `filters` parameter
+- [x] Pass `filters` directly to tRPC query (no serialization needed)
 
 ## Server-Side Implementation
 
-- [ ] Update tRPC `document.getAll` input schema to accept `filters` array
-- [ ] Create utility to build Prisma `where` clause from filters array
-- [ ] Handle string filters (text search with contains)
-- [ ] Handle select filters (exact match)
-- [ ] Handle multi-select filters (in operator with array)
-- [ ] Handle date range filters (gte/lte with from/to)
-- [ ] Handle number range filters (gte/lte with min/max)
-- [ ] Support partial range filters (only min, only max)
+- [x] Update tRPC `document.getAll` input schema to accept `filters` array
+- [x] Create utility to build Prisma `where` clause from filters array
+- [x] Handle string filters (text search with contains)
+- [x] Handle select filters (exact match)
+- [x] Handle multi-select filters (in operator with array)
+- [x] Handle date range filters (gte/lte with from/to)
+- [x] Handle number range filters (gte/lte with min/max)
+- [x] Support partial range filters (only min, only max)
 - [ ] Test server-side filtering with various filter combinations
 
 ## Integration & Testing
 
-- [ ] Update `DocumentListPage` to use `useDataTableFiltering` hook
-- [ ] Pass `filteringController` to DataTable component
-- [ ] Add `DataTable.Filter` component to Filters slot
-- [ ] Pass `columnFilters` to `useDocumentListQuery`
-- [ ] Add filter configurations to document table column definitions
+- [x] Update `DocumentListPage` to use `useDataTableFiltering` hook
+- [x] Pass `filteringController` to DataTable component
+- [x] Add `DataTable.Filter` component to Filters slot
+- [x] Pass `columnFilters` to `useDocumentListQuery`
+- [x] Add filter configurations to document table column definitions
 - [ ] Test search filter on filename column
 - [ ] Test select filter on document type column
 - [ ] Test date range filter on createdAt column
