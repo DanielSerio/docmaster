@@ -3,7 +3,7 @@ import { ErrorSnackbar } from '@/components/feedback/ErrorSnackbar';
 import type { AppRouter } from '../../../server/src/routers/index.js';
 import type { TRPCClientErrorLike } from '@trpc/client';
 
-type ErrorState = Omit<TRPCClientErrorLike<AppRouter>, 'shape'> &
+export type ErrorState = Omit<TRPCClientErrorLike<AppRouter>, 'shape'> &
   Partial<TRPCClientErrorLike<AppRouter>['shape']>;
 
 export interface ErrorContextValue {

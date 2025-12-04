@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select';
 import { Controller } from 'react-hook-form';
 import { useNavigate } from '@tanstack/react-router';
+import { useError, type ErrorState } from '@/contexts/error';
 
 export function DocumentForm({ form }: { form: ReturnType<typeof useDocumentForm> }) {
   const {
@@ -28,11 +29,12 @@ export function DocumentForm({ form }: { form: ReturnType<typeof useDocumentForm
     handleSubmit,
     formState: { isValid }
   } = form;
+  const { setError } = useError();
   const navigate = useNavigate();
   const mutation = useCreateDocumentMutation({
     onSuccess: () => navigate({ to: '/documents' }),
-    onError: () => {
-      console.log('error');
+    onError: (error) => {
+      setError(error as ErrorState);
     }
   });
 
