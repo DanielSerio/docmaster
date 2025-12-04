@@ -8,7 +8,7 @@ interface DTSortIndicatorProps {
 }
 
 export function DTSortIndicator({ direction, priority, className }: DTSortIndicatorProps) {
-  const showPriority = priority !== undefined && priority > 0;
+  const showPriority = priority !== undefined;
 
   return (
     <div className={cn('flex items-center gap-1', className)}>
