@@ -18,9 +18,26 @@ export const documentRouter = router({
     }),
 
   getAll: publicProcedure
-    .output(z.array(documentSchema))
-    .query(async () => {
-      return await documentService.getAllDocuments();
+    .input(z.object({
+      offset: z.number().default(0),
+      limit: z.number().default(10),
+    }))
+    .output(z.object({
+      paging: z.object({
+        offset: z.number(),
+        limit: z.number(),
+        total: z.object({
+          pages: z.number(),
+          records: z.number(),
+        }),
+      }),
+      results: z.array(documentSchema),
+    }))
+    .query(async ({ input }) => {
+      return await documentService.getAllDocuments({
+        offset: input.offset,
+        limit: input.limit,
+      });
     }),
 
   getById: publicProcedure

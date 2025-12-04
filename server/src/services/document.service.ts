@@ -50,10 +50,26 @@ const createDocumentImpl = async (data: CreateDocumentInput) => {
   });
 };
 
-const getAllDocumentsImpl = async () => {
-  return await prisma.document.findMany({
+const getAllDocumentsImpl = async ({ offset, limit }: { offset: number; limit: number; }) => {
+  const results = await prisma.document.findMany({
     orderBy: { id: "asc" },
+    skip: offset,
+    take: limit,
   });
+
+  const count = await prisma.document.count();
+
+  return {
+    paging: {
+      offset,
+      limit,
+      total: {
+        pages: Math.ceil(count / limit),
+        records: count,
+      }
+    },
+    results,
+  };
 };
 
 const getDocumentByIdImpl = async (id: number) => {

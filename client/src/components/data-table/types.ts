@@ -1,3 +1,4 @@
+import type { PagingController } from "@/hooks/data-table";
 import type { ColumnDef, ColumnMeta, RowData, Table } from "@tanstack/react-table";
 import type { PropsWithChildren } from "react";
 
@@ -27,7 +28,6 @@ interface DTSectionProps<TData extends DTRowType> {
 export type DTHeaderProps<TData extends DTRowType> = DTSectionProps<TData>;
 export type DTBodyProps<TData extends DTRowType> = DTSectionProps<TData> & {
   isLoading?: boolean | null;
-  error?: Error | null;
   skeletonRowCount: number;
   emptyIcon?: React.ReactNode;
   emptyTitle: string;
@@ -54,11 +54,12 @@ export interface DataTableProps<TData extends DTRowType> {
   columnDefs: DTColumnDef<TData, unknown>[];
   getRowId: (row: TData) => string;
   isLoading?: boolean | null;
-  error?: Error | null;
   skeletonRowCount?: number;
   emptyIcon?: React.ReactNode;
   emptyTitle: string;
   emptyDescription: string;
+  children?: React.ReactNode;
+  pagingController: PagingController;
 }
 
 export type DTRowRecord<TData extends object & RowData> = TData & {
