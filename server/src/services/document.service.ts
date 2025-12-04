@@ -65,7 +65,6 @@ const buildFiltersWhere = (filters?: ColumnFilter[]): Prisma.DocumentWhereInput 
 
   for (const filter of filters) {
     switch (filter.id) {
-      case 'type':
       case 'documentType':
         // Handle single select filter (exact match)
         if (typeof filter.value === 'string') {

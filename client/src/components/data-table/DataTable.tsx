@@ -7,7 +7,7 @@ import { DTFilters } from './subcomponents/DTFilters';
 import { DTHeaderSlot } from './subcomponents/DTHeaderSlot';
 import { DTFilter } from './subcomponents/DTFilter';
 import type { DataTableProps, DTRowType } from './types';
-import { Children, isValidElement, useMemo, useState, useCallback, useRef } from 'react';
+import { Children, isValidElement, useMemo, useState, useCallback } from 'react';
 import { getInitialVisibilityState, getTableGrid } from './utils';
 import { DataTableProvider } from './DataTableContext';
 import { DTPagination } from './subcomponents/DTPagination';

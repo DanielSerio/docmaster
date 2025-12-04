@@ -17,7 +17,7 @@ export function useDocumentListQuery(
 
   useEffect(() => {
     if (query.error) {
-      setError(query.error as Parameters<typeof setError>[0]);
+      setError(query.error);
     }
   }, [query.error, setError]);
 

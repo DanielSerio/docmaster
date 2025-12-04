@@ -14,7 +14,7 @@ export function useDocumentTableColumns() {
     return [
       lineNumber,
       {
-        id: 'type',
+        id: 'documentType',
         accessorKey: 'documentType',
         header: 'Type',
         meta: {

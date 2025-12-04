@@ -21,15 +21,22 @@ export function DTFilterDateRange({ value, onChange }: DTFilterProps) {
   };
 
   const handleSelect = (range: DateRange | undefined) => {
-    if (!range) {
+    if (!range || (!range.from && !range.to)) {
       onChange(undefined);
       return;
     }
 
-    onChange({
+    const newRange = {
       from: range.from ? range.from.toISOString().split('T')[0] : undefined,
       to: range.to ? range.to.toISOString().split('T')[0] : undefined
-    });
+    };
+
+    // If both from and to are undefined, treat as cleared
+    if (!newRange.from && !newRange.to) {
+      onChange(undefined);
+    } else {
+      onChange(newRange);
+    }
   };
 
   return (
