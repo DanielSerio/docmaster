@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { prisma } from "../lib/prisma.js";
 import { withErrorHandling } from "../utils/errors.js";
 import type { CreateDocumentInput, UpdateDocumentInput } from "../lib/schemas/index.js";
+import type { Prisma } from "@prisma/client";
 
 const createDocumentImpl = async (data: CreateDocumentInput) => {
   return await prisma.$transaction(async (tx) => {
@@ -50,14 +51,98 @@ const createDocumentImpl = async (data: CreateDocumentInput) => {
   });
 };
 
-const getAllDocumentsImpl = async ({ offset, limit }: { offset: number; limit: number; }) => {
+interface ColumnFilter {
+  id: string;
+  value: unknown;
+}
+
+const buildFiltersWhere = (filters?: ColumnFilter[]): Prisma.DocumentWhereInput => {
+  if (!filters || filters.length === 0) {
+    return {};
+  }
+
+  const where: Prisma.DocumentWhereInput = {};
+
+  for (const filter of filters) {
+    switch (filter.id) {
+      case 'documentType':
+        // Handle single select filter (exact match)
+        if (typeof filter.value === 'string') {
+          where.documentType = filter.value as 'general' | 'rule';
+        }
+        break;
+
+      case 'filename':
+        // Handle search filter (case-insensitive contains)
+        if (typeof filter.value === 'string') {
+          where.filename = {
+            contains: filter.value,
+            mode: 'insensitive'
+          };
+        }
+        break;
+
+      case 'createdAt':
+        // Handle date range filter (supports partial ranges)
+        if (filter.value && typeof filter.value === 'object') {
+          const range = filter.value as { from?: string; to?: string };
+          where.createdAt = {};
+          if (range.from) {
+            where.createdAt.gte = new Date(range.from);
+          }
+          if (range.to) {
+            where.createdAt.lte = new Date(range.to);
+          }
+        }
+        break;
+
+      // Example: Multi-select filter (would use 'in' operator)
+      // case 'status':
+      //   if (Array.isArray(filter.value) && filter.value.length > 0) {
+      //     where.status = {
+      //       in: filter.value as string[]
+      //     };
+      //   }
+      //   break;
+
+      // Example: Number range filter (supports partial ranges)
+      // case 'priority':
+      //   if (filter.value && typeof filter.value === 'object') {
+      //     const range = filter.value as { min?: number; max?: number };
+      //     where.priority = {};
+      //     if (range.min !== undefined) {
+      //       where.priority.gte = range.min;
+      //     }
+      //     if (range.max !== undefined) {
+      //       where.priority.lte = range.max;
+      //     }
+      //   }
+      //   break;
+    }
+  }
+
+  return where;
+};
+
+const getAllDocumentsImpl = async ({
+  offset,
+  limit,
+  filters
+}: {
+  offset: number;
+  limit: number;
+  filters?: ColumnFilter[];
+}) => {
+  const where = buildFiltersWhere(filters);
+
   const results = await prisma.document.findMany({
+    where,
     orderBy: { id: "asc" },
     skip: offset,
     take: limit,
   });
 
-  const count = await prisma.document.count();
+  const count = await prisma.document.count({ where });
 
   return {
     paging: {

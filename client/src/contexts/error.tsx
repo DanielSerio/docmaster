@@ -8,7 +8,7 @@ export type ErrorState = Omit<TRPCClientErrorLike<AppRouter>, 'shape'> &
 
 export interface ErrorContextValue {
   error: ErrorState | null;
-  setError: (error: ErrorState) => void;
+  setError: (error: TRPCClientErrorLike<AppRouter> | ErrorState) => void;
   clearError: () => void;
 }
 
@@ -21,11 +21,11 @@ export function ErrorProvider({ children }: { children: React.ReactNode }) {
   const [errorQueue, setErrorQueue] = useState<ErrorState[]>([]);
 
   const setError = useCallback(
-    (newError: ErrorState) => {
+    (newError: TRPCClientErrorLike<AppRouter> | ErrorState) => {
       if (error) {
-        setErrorQueue((prev) => [...prev, newError]);
+        setErrorQueue((prev) => [...prev, newError as ErrorState]);
       } else {
-        setErrorState(newError);
+        setErrorState(newError as ErrorState);
       }
     },
     [error]

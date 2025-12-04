@@ -5,8 +5,9 @@ import { DTTableBody } from './subcomponents/DTTableBody';
 import { DTTitleBar } from './subcomponents/DTTitleBar';
 import { DTFilters } from './subcomponents/DTFilters';
 import { DTHeaderSlot } from './subcomponents/DTHeaderSlot';
+import { DTFilter } from './subcomponents/DTFilter';
 import type { DataTableProps, DTRowType } from './types';
-import { Children, isValidElement, useMemo, useState } from 'react';
+import { Children, isValidElement, useMemo, useState, useCallback } from 'react';
 import { getInitialVisibilityState, getTableGrid } from './utils';
 import { DataTableProvider } from './DataTableContext';
 import { DTPagination } from './subcomponents/DTPagination';
@@ -22,20 +23,26 @@ function DataTableRoot<TData extends DTRowType>({
   emptyDescription,
   getRowId,
   children,
-  pagingController
+  pagingController,
+  filteringController
 }: DataTableProps<TData>) {
   // create column visibility state
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() =>
     getInitialVisibilityState(columnDefs)
   );
 
+  // memoize getRowId function to prevent table recreation
+  const getRowIdCallback = useCallback((originalRow: TData) => {
+    return `${id}-${getRowId(originalRow)}`;
+  }, [id, getRowId]);
+
   // create table instance
+  // Note: We don't pass columnFilters to the table since we're doing server-side filtering
+  // The table doesn't need to know about filters - we handle them separately
   const table = useReactTable({
     data: rows,
     columns: columnDefs,
-    getRowId(originalRow) {
-      return `${id}-${getRowId(originalRow)}`;
-    },
+    getRowId: getRowIdCallback,
     getCoreRowModel: getCoreRowModel(),
     state: {
       columnVisibility
@@ -49,7 +56,9 @@ function DataTableRoot<TData extends DTRowType>({
   }, [columnVisibility, columnDefs]);
 
   // get grid template columns for visible columns
-  const { gridTemplateColumns } = getTableGrid(visibleColumnDefs);
+  const gridTemplateColumns = useMemo(() => {
+    return getTableGrid(visibleColumnDefs).gridTemplateColumns;
+  }, [visibleColumnDefs]);
 
   // extract slot content from children
   const slots = useMemo(() => {
@@ -71,8 +80,14 @@ function DataTableRoot<TData extends DTRowType>({
     );
   }, [children]);
 
+  const contextValue = useMemo(() => ({
+    table,
+    gridTemplateColumns,
+    filteringController
+  }), [table, gridTemplateColumns, filteringController]);
+
   return (
-    <DataTableProvider value={{ table, gridTemplateColumns }}>
+    <DataTableProvider value={contextValue}>
       <div className="flex flex-col border rounded-md bg-card max-h-[calc(100vh-88px)] 2xl:max-h-[calc(100vh-120px)]">
         <header className="flex flex-col">
           {slots.titleBar}
@@ -106,5 +121,6 @@ function DataTableRoot<TData extends DTRowType>({
 export const DataTable = Object.assign(DataTableRoot, {
   TitleBar: DTTitleBar,
   Filters: DTFilters,
-  Header: DTHeaderSlot
+  Header: DTHeaderSlot,
+  Filter: DTFilter
 });

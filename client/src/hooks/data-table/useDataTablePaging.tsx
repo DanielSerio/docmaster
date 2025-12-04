@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 
 const defaultPaging = {
   limit: 10,
@@ -17,31 +17,34 @@ export function useDataTablePaging(paging?: PagingType) {
     }
   }, [paging]);
 
-  const setTotalPages = (totalPages: number) =>
+  const setTotalPages = useCallback((totalPages: number) => {
     setPagination((prev) => ({
       ...prev,
       totalPages
     }));
+  }, []);
 
-  const prevPage = () =>
+  const prevPage = useCallback(() => {
     setPagination((prev) => ({
       ...prev,
       offset: Math.max(0, prev.offset - prev.limit)
     }));
+  }, []);
 
-  const nextPage = () =>
+  const nextPage = useCallback(() => {
     setPagination((prev) => ({
       ...prev,
       offset: prev.offset + prev.limit
     }));
+  }, []);
 
-  const methods = {
+  const methods = useMemo(() => ({
     setTotalPages,
     prevPage,
     nextPage
-  };
+  }), [setTotalPages, prevPage, nextPage]);
 
-  return [pagination, methods] as const;
+  return useMemo(() => [pagination, methods] as const, [pagination, methods]);
 }
 
 export type PagingMethods = ReturnType<typeof useDataTablePaging>[1];
