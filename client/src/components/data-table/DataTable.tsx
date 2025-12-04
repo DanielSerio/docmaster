@@ -53,23 +53,22 @@ function DataTableRoot<TData extends DTRowType>({
 
   // extract slot content from children
   const slots = useMemo(() => {
-    let titleBar: React.ReactNode = null;
-    let filters: React.ReactNode = null;
-    let header: React.ReactNode = null;
+    return Children.toArray(children).reduce(
+      (acc, child) => {
+        if (!isValidElement(child)) return acc;
 
-    Children.forEach(children, (child) => {
-      if (!isValidElement(child)) return;
+        if (child.type === DTTitleBar) {
+          acc.titleBar = child;
+        } else if (child.type === DTFilters) {
+          acc.filters = child;
+        } else if (child.type === DTHeaderSlot) {
+          acc.header = child;
+        }
 
-      if (child.type === DTTitleBar) {
-        titleBar = child;
-      } else if (child.type === DTFilters) {
-        filters = child;
-      } else if (child.type === DTHeaderSlot) {
-        header = child;
-      }
-    });
-
-    return { titleBar, filters, header };
+        return acc;
+      },
+      { titleBar: null as React.ReactNode, filters: null as React.ReactNode, header: null as React.ReactNode }
+    );
   }, [children]);
 
   return (
