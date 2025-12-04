@@ -35,9 +35,8 @@ export const buildDocumentSortingOrderBy = (sorting?: ColumnSort[]): Record<stri
 
   if (validSorts.length === 1) {
     const sort = validSorts[0];
-    if (!sort) return { id: "asc" };
-    const field = fieldMap[sort.id];
-    return { [field]: sort.desc ? 'desc' : 'asc' } as Record<string, 'asc' | 'desc'>;
+    const field = fieldMap[sort.id]!;
+    return { [field]: sort.desc ? 'desc' : 'asc' };
   }
 
   // Multi-column sorting
