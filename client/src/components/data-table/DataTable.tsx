@@ -17,7 +17,6 @@ function DataTableRoot<TData extends DTRowType>({
   rows,
   skeletonRowCount = 5,
   isLoading,
-  error,
   emptyIcon,
   emptyTitle,
   emptyDescription,
@@ -92,7 +91,6 @@ function DataTableRoot<TData extends DTRowType>({
               table={table}
               gridTemplateColumns={gridTemplateColumns}
               isLoading={isLoading}
-              error={error}
               skeletonRowCount={skeletonRowCount}
               emptyIcon={emptyIcon}
               emptyTitle={emptyTitle}

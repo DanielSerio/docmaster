@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { TRPCProvider } from './lib/trpc/provider';
+import { ErrorProvider } from './contexts/error';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 
 // Import the generated route tree
@@ -19,8 +20,10 @@ declare module '@tanstack/react-router' {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <TRPCProvider>
-      <RouterProvider router={router} />
-    </TRPCProvider>
+    <ErrorProvider>
+      <TRPCProvider>
+        <RouterProvider router={router} />
+      </TRPCProvider>
+    </ErrorProvider>
   </StrictMode>,
 );

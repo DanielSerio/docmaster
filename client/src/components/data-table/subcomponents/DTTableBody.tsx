@@ -4,7 +4,6 @@ import { DTRow } from './DTRow';
 import { DTCell } from './DTCell';
 import { flexRender } from '@tanstack/react-table';
 import { DTTableSkeleton } from './DTTableSkeleton';
-import { DTTableError } from './DTTableError';
 import { DTTableEmpty } from './DTTableEmpty';
 
 export function DTTableBody<TData extends DTRowType>({
@@ -12,7 +11,6 @@ export function DTTableBody<TData extends DTRowType>({
   gridTemplateColumns,
   skeletonRowCount,
   isLoading,
-  error,
   columnDefs,
   emptyIcon,
   emptyTitle,
@@ -27,11 +25,6 @@ export function DTTableBody<TData extends DTRowType>({
         columnCount={columnDefs.length}
       />
     );
-  }
-
-  // Error
-  if (error) {
-    return <DTTableError error={error} />;
   }
 
   // No Data

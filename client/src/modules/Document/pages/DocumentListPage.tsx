@@ -8,11 +8,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
+import { useError } from '@/contexts/error';
 
 export function DocumentListPage() {
+  const { setError } = useError();
   const pagingController = useDataTablePaging();
   const [pagination] = pagingController;
-  const listQuery = useDocumentListQuery(pagination);
+  const listQuery = useDocumentListQuery(pagination, setError);
   const rows = useDataTableRows(listQuery.data?.results);
   const columnDefs = useDocumentTableColumns();
 
@@ -26,7 +28,6 @@ export function DocumentListPage() {
         isLoading={listQuery.isLoading}
         emptyTitle="No Documents"
         emptyDescription="You haven't created any documents yet. Get started by creating your first document."
-        error={listQuery.error as Error | null}
         pagingController={pagingController}
       >
         <DataTable.TitleBar>
