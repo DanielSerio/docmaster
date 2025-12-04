@@ -7,8 +7,8 @@ export interface DTPaginationProps {
 
 export function DTPagination({ controller: [pagination, methods] }: DTPaginationProps) {
   const currentPage = Math.floor(pagination.offset / pagination.limit) + 1;
-  const lastPageDisabled =
-    Math.ceil((pagination.offset + pagination.limit) / pagination.limit) > pagination.totalPages;
+  const lastPageDisabled = currentPage >= pagination.totalPages;
+
   return (
     <footer className="flex justify-end px-4 py-2">
       <Button

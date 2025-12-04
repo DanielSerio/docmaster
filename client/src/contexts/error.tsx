@@ -12,6 +12,8 @@ export interface ErrorContextValue {
   clearError: () => void;
 }
 
+const timeout = 100;
+
 const ErrorContext = createContext<ErrorContextValue | null>(null);
 
 export function ErrorProvider({ children }: { children: React.ReactNode }) {
@@ -37,7 +39,7 @@ export function ErrorProvider({ children }: { children: React.ReactNode }) {
       setErrorQueue(remainingQueue);
       setTimeout(() => {
         setErrorState(nextError);
-      }, 100);
+      }, timeout);
     }
   }, [errorQueue]);
 

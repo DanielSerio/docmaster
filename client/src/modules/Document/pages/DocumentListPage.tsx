@@ -13,8 +13,8 @@ import { useError } from '@/contexts/error';
 export function DocumentListPage() {
   const { setError } = useError();
   const pagingController = useDataTablePaging();
-  const [pagination] = pagingController;
-  const listQuery = useDocumentListQuery(pagination, setError);
+  const [pagination, { setTotalPages }] = pagingController;
+  const listQuery = useDocumentListQuery(pagination, setError, setTotalPages);
   const rows = useDataTableRows(listQuery.data?.results);
   const columnDefs = useDocumentTableColumns();
 

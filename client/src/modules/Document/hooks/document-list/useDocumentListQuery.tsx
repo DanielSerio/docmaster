@@ -1,11 +1,12 @@
-import type { PagingType } from '@/hooks/data-table';
+import type { PagingType, PagingMethods } from '@/hooks/data-table';
 import { trpc } from '@/lib/trpc/react';
 import type { ErrorContextValue } from '@/contexts/error';
 import { useEffect } from 'react';
 
 export function useDocumentListQuery(
   paging: Omit<PagingType, 'totalPages'>,
-  setError: ErrorContextValue['setError']
+  setError: ErrorContextValue['setError'],
+  setTotalPages: PagingMethods['setTotalPages']
 ) {
   const query = trpc.document.getAll.useQuery(paging);
 
@@ -14,6 +15,12 @@ export function useDocumentListQuery(
       setError(query.error);
     }
   }, [query.error, setError]);
+
+  useEffect(() => {
+    if (query.data?.paging) {
+      setTotalPages(query.data.paging.total.pages);
+    }
+  }, [query.data, setTotalPages]);
 
   return query;
 }
