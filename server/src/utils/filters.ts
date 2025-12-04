@@ -28,8 +28,8 @@ export const buildDocumentFiltersWhere = (filters?: ColumnFilter[]): Prisma.Docu
     switch (filter.id) {
       case 'documentType':
         // Handle single select filter (exact match)
-        if (typeof filter.value === 'string') {
-          where.documentType = filter.value as 'general' | 'rule';
+        if (typeof filter.value === 'string' && (filter.value === 'general' || filter.value === 'rule')) {
+          where.documentType = filter.value;
         }
         break;
 
