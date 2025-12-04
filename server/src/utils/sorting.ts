@@ -41,7 +41,7 @@ export const buildDocumentSortingOrderBy = (sorting?: ColumnSort[]): Record<stri
 
   // Multi-column sorting
   return validSorts.map(sort => {
-    const field = fieldMap[sort.id];
-    return { [field]: sort.desc ? 'desc' : 'asc' } as Record<string, 'asc' | 'desc'>;
+    const field = fieldMap[sort.id]!;
+    return { [field]: sort.desc ? 'desc' : 'asc' };
   });
 };
