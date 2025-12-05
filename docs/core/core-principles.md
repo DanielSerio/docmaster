@@ -18,6 +18,7 @@
    - **Test files** - Files that contain only test code. (named `*.test.ts` or `*.test.tsx`)
    - **Storybook files** - Files that contain only storybook code. (named `*.stories.tsx`)
    - **use[FeatureName]TableColumns hook files** - Files that contain only table column definitions.
+   - **Shadcn UI component files** - Third-party UI library wrapper components from Shadcn UI. (found in `client/src/components/ui/` directory)
 
 ## React
 
