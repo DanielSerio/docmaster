@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocumentsIndexRouteImport } from './routes/documents/index'
+import { Route as CollectionsIndexRouteImport } from './routes/collections/index'
 import { Route as TextblocksNewRouteImport } from './routes/textblocks/new'
 import { Route as TextblocksBlockIdRouteImport } from './routes/textblocks/$blockId'
 import { Route as RulesNewRouteImport } from './routes/rules/new'
@@ -32,6 +33,11 @@ const IndexRoute = IndexRouteImport.update({
 const DocumentsIndexRoute = DocumentsIndexRouteImport.update({
   id: '/documents/',
   path: '/documents/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionsIndexRoute = CollectionsIndexRouteImport.update({
+  id: '/collections/',
+  path: '/collections/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TextblocksNewRoute = TextblocksNewRouteImport.update({
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/rules/new': typeof RulesNewRoute
   '/textblocks/$blockId': typeof TextblocksBlockIdRoute
   '/textblocks/new': typeof TextblocksNewRoute
+  '/collections': typeof CollectionsIndexRoute
   '/documents': typeof DocumentsIndexRoute
   '/collections/$collectionId/download': typeof CollectionsCollectionIdDownloadRoute
   '/documents/$id/blocks': typeof DocumentsIdBlocksRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/rules/new': typeof RulesNewRoute
   '/textblocks/$blockId': typeof TextblocksBlockIdRoute
   '/textblocks/new': typeof TextblocksNewRoute
+  '/collections': typeof CollectionsIndexRoute
   '/documents': typeof DocumentsIndexRoute
   '/collections/$collectionId/download': typeof CollectionsCollectionIdDownloadRoute
   '/documents/$id/blocks': typeof DocumentsIdBlocksRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/rules/new': typeof RulesNewRoute
   '/textblocks/$blockId': typeof TextblocksBlockIdRoute
   '/textblocks/new': typeof TextblocksNewRoute
+  '/collections/': typeof CollectionsIndexRoute
   '/documents/': typeof DocumentsIndexRoute
   '/collections/$collectionId/download': typeof CollectionsCollectionIdDownloadRoute
   '/documents/$id/blocks': typeof DocumentsIdBlocksRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/rules/new'
     | '/textblocks/$blockId'
     | '/textblocks/new'
+    | '/collections'
     | '/documents'
     | '/collections/$collectionId/download'
     | '/documents/$id/blocks'
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/rules/new'
     | '/textblocks/$blockId'
     | '/textblocks/new'
+    | '/collections'
     | '/documents'
     | '/collections/$collectionId/download'
     | '/documents/$id/blocks'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/rules/new'
     | '/textblocks/$blockId'
     | '/textblocks/new'
+    | '/collections/'
     | '/documents/'
     | '/collections/$collectionId/download'
     | '/documents/$id/blocks'
@@ -205,6 +217,7 @@ export interface RootRouteChildren {
   RulesNewRoute: typeof RulesNewRoute
   TextblocksBlockIdRoute: typeof TextblocksBlockIdRoute
   TextblocksNewRoute: typeof TextblocksNewRoute
+  CollectionsIndexRoute: typeof CollectionsIndexRoute
   DocumentsIndexRoute: typeof DocumentsIndexRoute
   CollectionsCollectionIdDownloadRoute: typeof CollectionsCollectionIdDownloadRoute
   DocumentsIdBlocksRoute: typeof DocumentsIdBlocksRoute
@@ -228,6 +241,13 @@ declare module '@tanstack/react-router' {
       path: '/documents'
       fullPath: '/documents'
       preLoaderRoute: typeof DocumentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collections/': {
+      id: '/collections/'
+      path: '/collections'
+      fullPath: '/collections'
+      preLoaderRoute: typeof CollectionsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/textblocks/new': {
@@ -325,6 +345,7 @@ const rootRouteChildren: RootRouteChildren = {
   RulesNewRoute: RulesNewRoute,
   TextblocksBlockIdRoute: TextblocksBlockIdRoute,
   TextblocksNewRoute: TextblocksNewRoute,
+  CollectionsIndexRoute: CollectionsIndexRoute,
   DocumentsIndexRoute: DocumentsIndexRoute,
   CollectionsCollectionIdDownloadRoute: CollectionsCollectionIdDownloadRoute,
   DocumentsIdBlocksRoute: DocumentsIdBlocksRoute,
