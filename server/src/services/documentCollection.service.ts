@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { prisma } from "../lib/prisma.js";
 import { withErrorHandling } from "../utils/errors.js";
 import type { CreateDocumentCollectionInput, UpdateDocumentCollectionInput } from "../lib/schemas/index.js";
+import { buildCollectionFiltersWhere, type ColumnFilter } from "../utils/filters.js";
+import { buildCollectionSortingOrderBy, type ColumnSort } from "../utils/sorting.js";
 
 const createDocumentCollectionImpl = async (data: CreateDocumentCollectionInput) => {
   return await prisma.documentCollection.create({
@@ -9,10 +11,40 @@ const createDocumentCollectionImpl = async (data: CreateDocumentCollectionInput)
   });
 };
 
-const getAllDocumentCollectionsImpl = async () => {
-  return await prisma.documentCollection.findMany({
-    orderBy: { id: "asc" },
+const getAllDocumentCollectionsImpl = async ({
+  offset,
+  limit,
+  filters,
+  sorting
+}: {
+  offset: number;
+  limit: number;
+  filters?: ColumnFilter[];
+  sorting?: ColumnSort[];
+}) => {
+  const where = buildCollectionFiltersWhere(filters);
+  const orderBy = buildCollectionSortingOrderBy(sorting);
+
+  const results = await prisma.documentCollection.findMany({
+    where,
+    orderBy,
+    skip: offset,
+    take: limit,
   });
+
+  const count = await prisma.documentCollection.count({ where });
+
+  return {
+    paging: {
+      offset,
+      limit,
+      total: {
+        pages: Math.ceil(count / limit),
+        records: count,
+      }
+    },
+    results,
+  };
 };
 
 const getDocumentCollectionByIdImpl = async (id: number) => {
