@@ -48,3 +48,20 @@ export const toggleDocumentRuleEnabledInputSchema = z.object({
 export type GetDocumentRulesInput = z.infer<typeof getDocumentRulesInputSchema>;
 export type UpdateDocumentRulePriorityInput = z.infer<typeof updateDocumentRulePriorityInputSchema>;
 export type ToggleDocumentRuleEnabledInput = z.infer<typeof toggleDocumentRuleEnabledInputSchema>;
+
+export const batchUpdateDocumentRulesInputSchema = z.object({
+  documentId: documentIdSchema,
+  newRules: z.array(z.object({
+    ruleId: ruleIdSchema,
+    priority: prioritySchema,
+    isEnabled: isEnabledSchema
+  })).default([]),
+  updatedRules: z.array(z.object({
+    ruleId: ruleIdSchema,
+    priority: prioritySchema,
+    isEnabled: isEnabledSchema
+  })).default([]),
+  deletedRuleIds: z.array(ruleIdSchema).default([])
+});
+
+export type BatchUpdateDocumentRulesInput = z.infer<typeof batchUpdateDocumentRulesInputSchema>;

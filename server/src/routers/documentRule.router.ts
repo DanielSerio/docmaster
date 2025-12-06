@@ -6,6 +6,7 @@ import {
   getDocumentRulesInputSchema,
   updateDocumentRulePriorityInputSchema,
   toggleDocumentRuleEnabledInputSchema,
+  batchUpdateDocumentRulesInputSchema,
 } from "../lib/schemas/index.js";
 
 export const documentRuleRouter = router({
@@ -28,5 +29,12 @@ export const documentRuleRouter = router({
     .output(documentRuleWithRuleSchema)
     .mutation(async ({ input }) => {
       return await documentRuleService.toggleDocumentRuleEnabled(input);
+    }),
+
+  batchUpdate: publicProcedure
+    .input(batchUpdateDocumentRulesInputSchema)
+    .output(z.array(documentRuleWithRuleSchema))
+    .mutation(async ({ input }) => {
+      return await documentRuleService.batchUpdateDocumentRules(input);
     }),
 });

@@ -50,6 +50,13 @@ export const deleteManyRulesInputSchema = z.object({
   ids: z.array(idSchema).min(1, getMessage("ids", "arrayMin"))
 });
 
+export const batchUpdateRulesInputSchema = z.object({
+  newRules: z.array(createRuleInputSchema).default([]),
+  updatedRules: z.array(ruleSchema).default([]),
+  deletedIds: z.array(idSchema).default([])
+});
+
 export type GetRuleByIdInput = z.infer<typeof getRuleByIdInputSchema>;
 export type DeleteRuleInput = z.infer<typeof deleteRuleInputSchema>;
 export type DeleteManyRulesInput = z.infer<typeof deleteManyRulesInputSchema>;
+export type BatchUpdateRulesInput = z.infer<typeof batchUpdateRulesInputSchema>;
