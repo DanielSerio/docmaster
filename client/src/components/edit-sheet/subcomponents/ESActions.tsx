@@ -17,7 +17,7 @@ export function ESActions({ rowIndex, disabled }: ESActionsProps) {
       size="icon"
       onClick={() => onRowDelete(rowIndex)}
       disabled={disabled}
-      data-testid={`delete-button-${rowIndex}`}
+      data-testid="delete-button"
       aria-label="Delete row"
     >
       <Trash2 className="h-4 w-4" />

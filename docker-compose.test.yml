@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db-test:
     image: postgres:16-alpine
@@ -65,6 +63,12 @@ services:
     networks:
       - docmaster-test
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:5173"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   test-runner:
     build:
@@ -80,10 +84,13 @@ services:
     env_file:
       - .env.test
     depends_on:
-      - client
-      - server
+      client:
+        condition: service_healthy
+      server:
+        condition: service_started
     networks:
       - docmaster-test
+    restart: "no"  # Don't restart after tests complete
 
 networks:
   docmaster-test:
