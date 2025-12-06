@@ -1,20 +1,16 @@
-import { useState, useEffect, useRef } from "react";
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, useRef } from 'react';
+import { Check, ChevronsUpDown, Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  CommandList
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface CategoryTypeAheadProps {
   value: string;
@@ -29,10 +25,10 @@ export function CategoryTypeAhead({
   onChange,
   onFocus,
   disabled,
-  suggestions,
+  suggestions
 }: CategoryTypeAheadProps) {
   const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
+  const [inputValue, setInputValue] = useState(value ?? '');
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Sync input value with prop value
@@ -46,9 +42,7 @@ export function CategoryTypeAhead({
   );
 
   // Check if input exactly matches an existing suggestion
-  const exactMatch = suggestions.some(
-    (s) => s.toLowerCase() === inputValue.toLowerCase()
-  );
+  const exactMatch = suggestions.some((s) => s.toLowerCase() === inputValue.toLowerCase());
 
   // Show "Create new" option if there's input and no exact match
   const showCreateNew = inputValue.trim() && !exactMatch;
@@ -73,7 +67,10 @@ export function CategoryTypeAhead({
   };
 
   return (
-    <Popover open={open} onOpenChange={handleOpenChange}>
+    <Popover
+      open={open}
+      onOpenChange={handleOpenChange}
+    >
       <PopoverTrigger asChild>
         <Button
           ref={buttonRef}
@@ -84,13 +81,16 @@ export function CategoryTypeAhead({
           disabled={disabled}
           data-testid="category-typeahead-trigger"
         >
-          <span className={cn(!value && "text-muted-foreground")}>
-            {value || "Select or type category..."}
+          <span className={cn(!value && 'text-muted-foreground')}>
+            {value || 'Select or type category...'}
           </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0" align="start">
+      <PopoverContent
+        className="w-full p-0"
+        align="start"
+      >
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Type to search or create..."
@@ -113,8 +113,8 @@ export function CategoryTypeAhead({
                   >
                     <Check
                       className={cn(
-                        "mr-2 h-4 w-4",
-                        value === suggestion ? "opacity-100" : "opacity-0"
+                        'mr-2 h-4 w-4',
+                        value === suggestion ? 'opacity-100' : 'opacity-0'
                       )}
                     />
                     {suggestion}
