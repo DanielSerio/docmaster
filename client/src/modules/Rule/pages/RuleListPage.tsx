@@ -13,9 +13,15 @@ export function RuleListPage() {
   const mutation = useBatchUpdateRulesMutation();
 
   const handleSave = async (changes: BatchChanges<unknown>) => {
+    // Transform rules to extract categoryName from category object
+    const transformRule = (rule: any) => ({
+      ...rule,
+      categoryName: rule.category?.name || "",
+    });
+
     await mutation.mutateAsync({
-      newRules: changes.new,
-      updatedRules: changes.updated,
+      newRules: changes.new.map(transformRule),
+      updatedRules: changes.updated.map(transformRule),
       deletedIds: changes.deletedIds,
     });
   };

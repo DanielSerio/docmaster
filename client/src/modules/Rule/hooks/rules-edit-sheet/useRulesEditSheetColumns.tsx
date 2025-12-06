@@ -1,13 +1,7 @@
 import { useMemo } from "react";
 import { trpc } from "@/lib/trpc/react";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { CategoryTypeAhead } from "@/components/ui/category-typeahead";
 import type { ESColumnDef } from "@/components/edit-sheet";
 import type { RuleRecord } from "./useRulesQuery";
 
@@ -38,33 +32,31 @@ export function useRulesEditSheetColumns() {
         },
       },
       {
-        id: "categoryId",
-        accessorKey: "categoryId" as keyof RuleRecord,
+        id: "categoryName",
+        accessorKey: "category" as keyof RuleRecord,
         header: "Category",
         viewCell: ({ row }) => {
           const rule = row as unknown as RuleRecord;
           return <span>{rule.category?.name || ""}</span>;
         },
-        editCell: ({ value, onChange, onFocus, disabled }) => (
-          <Select
-            value={value ? String(value) : ""}
-            onValueChange={(val) => onChange(Number(val))}
-            disabled={disabled}
-          >
-            <SelectTrigger data-testid="select-category" onFocus={onFocus}>
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories?.map((cat) => (
-                <SelectItem key={cat.id} value={String(cat.id)}>
-                  {cat.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        ),
-        validation: (value) => {
-          if (!value) {
+        editCell: ({ row, onChange, onFocus, disabled }) => {
+          const rule = row as unknown as RuleRecord;
+          return (
+            <CategoryTypeAhead
+              value={rule.category?.name || ""}
+              onChange={(newCategoryName) => {
+                // Update the entire category object
+                onChange({ name: newCategoryName });
+              }}
+              onFocus={onFocus}
+              disabled={disabled}
+              suggestions={categories?.map((cat) => cat.name) || []}
+            />
+          );
+        },
+        validation: (value, row) => {
+          const rule = row as unknown as RuleRecord;
+          if (!rule.category?.name || rule.category.name.trim() === "") {
             return "Category is required";
           }
         },

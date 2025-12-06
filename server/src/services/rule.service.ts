@@ -5,9 +5,20 @@ import type { CreateRuleInput, UpdateRuleInput, BatchUpdateRulesInput } from "..
 
 const createRuleImpl = async (data: CreateRuleInput) => {
   return await prisma.$transaction(async (tx) => {
-    // Create the rule
+    // Upsert category to get ID
+    const category = await tx.ruleCategory.upsert({
+      where: { name: data.categoryName },
+      create: { name: data.categoryName },
+      update: {},
+    });
+
+    // Create the rule with categoryId
     const rule = await tx.rule.create({
-      data,
+      data: {
+        categoryId: category.id,
+        rawContent: data.rawContent,
+        defaultPriority: data.defaultPriority,
+      },
       include: {
         category: true,
       },
@@ -63,12 +74,26 @@ const getRuleByIdImpl = async (id: number) => {
 };
 
 const updateRuleImpl = async (id: number, data: UpdateRuleInput) => {
-  return await prisma.rule.update({
-    where: { id },
-    data,
-    include: {
-      category: true,
-    },
+  return await prisma.$transaction(async (tx) => {
+    // Upsert category to get ID
+    const category = await tx.ruleCategory.upsert({
+      where: { name: data.categoryName },
+      create: { name: data.categoryName },
+      update: {},
+    });
+
+    // Update the rule with categoryId
+    return await tx.rule.update({
+      where: { id },
+      data: {
+        categoryId: category.id,
+        rawContent: data.rawContent,
+        defaultPriority: data.defaultPriority,
+      },
+      include: {
+        category: true,
+      },
+    });
   });
 };
 
@@ -94,10 +119,17 @@ const batchUpdateRulesImpl = async (data: BatchUpdateRulesInput) => {
 
     // 2. Update existing rules
     for (const rule of data.updatedRules) {
+      // Upsert category to get ID
+      const category = await tx.ruleCategory.upsert({
+        where: { name: rule.categoryName },
+        create: { name: rule.categoryName },
+        update: {},
+      });
+
       await tx.rule.update({
         where: { id: rule.id },
         data: {
-          categoryId: rule.categoryId,
+          categoryId: category.id,
           rawContent: rule.rawContent,
           defaultPriority: rule.defaultPriority
         }
@@ -107,8 +139,19 @@ const batchUpdateRulesImpl = async (data: BatchUpdateRulesInput) => {
     // 3. Create new rules
     const newRules = [];
     for (const ruleData of data.newRules) {
+      // Upsert category to get ID
+      const category = await tx.ruleCategory.upsert({
+        where: { name: ruleData.categoryName },
+        create: { name: ruleData.categoryName },
+        update: {},
+      });
+
       const rule = await tx.rule.create({
-        data: ruleData,
+        data: {
+          categoryId: category.id,
+          rawContent: ruleData.rawContent,
+          defaultPriority: ruleData.defaultPriority,
+        },
         include: {
           category: true
         }
