@@ -1,5 +1,6 @@
 import { Edit2, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AsyncButton } from "@/components/ui/async-button";
 import type { EditMode } from "../types";
 
 interface ESToolbarProps {
@@ -35,8 +36,8 @@ export function ESToolbar({
     <div className="flex justify-end gap-2 p-4 border-b">
       {mode === "view" && (
         <Button onClick={onEdit} data-testid="edit-button">
-          <Edit2 className="h-4 w-4 mr-2" />
           Edit
+          <Edit2 className="h-4 w-4" />
         </Button>
       )}
 
@@ -48,17 +49,18 @@ export function ESToolbar({
             disabled={isSaving}
             data-testid="cancel-button"
           >
-            <X className="h-4 w-4 mr-2" />
             Cancel
+            <X className="h-4 w-4" />
           </Button>
-          <Button
+          <AsyncButton
             onClick={onSave}
-            disabled={!isValid || isSaving}
+            disabled={!isValid}
+            isBusy={isSaving}
+            icon={<Save className="h-4 w-4" />}
             data-testid="save-button"
           >
-            <Save className="h-4 w-4 mr-2" />
-            {isSaving ? "Saving..." : "Save"}
-          </Button>
+            Save
+          </AsyncButton>
         </>
       )}
     </div>

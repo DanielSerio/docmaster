@@ -98,7 +98,7 @@ export function CategoryTypeAhead({
             onValueChange={handleInputChange}
             data-testid="category-typeahead-input"
           />
-          <CommandList>
+          <CommandList className="w-full">
             {filteredSuggestions.length === 0 && !showCreateNew && (
               <CommandEmpty>No categories found.</CommandEmpty>
             )}
