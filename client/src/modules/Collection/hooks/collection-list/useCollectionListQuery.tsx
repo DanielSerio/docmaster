@@ -2,12 +2,10 @@ import type { PagingType, PagingMethods } from '@/hooks/data-table';
 import { trpc } from '@/lib/trpc/react';
 import type { ColumnFiltersState, SortingState } from '@tanstack/react-table';
 import { useEffect } from 'react';
-import type { TRPCClientErrorLike } from '@trpc/client';
-import type { AppRouter } from '../../../../../server/src/routers';
 
 export function useCollectionListQuery(
   paging: Omit<PagingType, 'totalPages'>,
-  onError: (error: TRPCClientErrorLike<AppRouter>) => void,
+  onError: (error: unknown) => void,
   setTotalPages: PagingMethods['setTotalPages'],
   filters: ColumnFiltersState = [],
   sorting: SortingState = []

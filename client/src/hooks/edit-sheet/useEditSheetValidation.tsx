@@ -56,10 +56,8 @@ export function useEditSheetValidation<TData extends ESRowType>(
     const newErrors: ValidationErrors = {};
 
     data.forEach((row, rowIndex) => {
-      // Skip empty new rows and deleted rows
       if (row.__isDeleted) return;
 
-      // Check if row is empty (all fields are empty)
       const keys = Object.keys(row).filter(
         (key) => key !== "__isNew" && key !== "__isDeleted" && key !== "id"
       );
@@ -68,7 +66,7 @@ export function useEditSheetValidation<TData extends ESRowType>(
         return value === undefined || value === null || value === "";
       });
 
-      if (isEmpty && row.__isNew) return; // Skip empty new rows
+      if (isEmpty && row.__isNew) return;
 
       const rowErrors = getRowErrors(row);
       if (Object.keys(rowErrors).length > 0) {

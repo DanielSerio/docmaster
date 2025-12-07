@@ -1,5 +1,5 @@
 import type { BatchChanges } from "@/components/edit-sheet";
-import type { RuleRecord } from "./useRulesQuery";
+import type { RuleRecord } from "../hooks/rules-edit-sheet/useRulesQuery";
 
 export function transformRule(rule: RuleRecord) {
   return {

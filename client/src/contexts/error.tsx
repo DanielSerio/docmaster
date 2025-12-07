@@ -1,14 +1,11 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { ErrorSnackbar } from '@/components/feedback/ErrorSnackbar';
-import type { AppRouter } from '../../../server/src/routers/index.js';
-import type { TRPCClientErrorLike } from '@trpc/client';
 
-export type ErrorState = Omit<TRPCClientErrorLike<AppRouter>, 'shape'> &
-  Partial<TRPCClientErrorLike<AppRouter>['shape']>;
+export type ErrorState = { message: string } & Record<string, unknown>;
 
 export interface ErrorContextValue {
   error: ErrorState | null;
-  setError: (error: TRPCClientErrorLike<AppRouter> | ErrorState) => void;
+  setError: (error: unknown) => void;
   clearError: () => void;
 }
 
@@ -21,11 +18,16 @@ export function ErrorProvider({ children }: { children: React.ReactNode }) {
   const [errorQueue, setErrorQueue] = useState<ErrorState[]>([]);
 
   const setError = useCallback(
-    (newError: TRPCClientErrorLike<AppRouter> | ErrorState) => {
+    (newError: unknown) => {
+      const nextError: ErrorState =
+        newError && typeof newError === 'object' && 'message' in (newError as any)
+          ? (newError as ErrorState)
+          : { message: String(newError ?? 'Unknown error') };
+
       if (error) {
-        setErrorQueue((prev) => [...prev, newError as ErrorState]);
+        setErrorQueue((prev) => [...prev, nextError]);
       } else {
-        setErrorState(newError as ErrorState);
+        setErrorState(nextError);
       }
     },
     [error]
@@ -62,7 +64,7 @@ export function useError(): ErrorContextValue {
 export function useErrorReporter() {
   const context = useContext(ErrorContext);
   const reportError = useCallback(
-    (error: TRPCClientErrorLike<AppRouter> | ErrorState) => {
+    (error: unknown) => {
       context?.setError(error);
     },
     [context]

@@ -22,7 +22,7 @@ export function DataTableProvider<TData extends DTRowType>({
   children: React.ReactNode;
 }) {
   return (
-    <DataTableContext.Provider value={value as DataTableContextStore}>
+    <DataTableContext.Provider value={value as unknown as DataTableContextStore}>
       {children}
     </DataTableContext.Provider>
   );
@@ -33,5 +33,5 @@ export function useDataTableContext<TData extends DTRowType>(): DataTableContext
   if (!context) {
     throw new Error('DataTable compound components must be used within <DataTable>');
   }
-  return context as DataTableContextValue<TData>;
+  return context as unknown as DataTableContextValue<TData>;
 }

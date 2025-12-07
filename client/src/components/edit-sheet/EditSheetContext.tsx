@@ -24,7 +24,7 @@ export function EditSheetProvider<TData extends ESRowType>({
   children: React.ReactNode;
 }) {
   return (
-    <EditSheetContext.Provider value={value as EditSheetContextStore}>
+    <EditSheetContext.Provider value={value as unknown as EditSheetContextStore}>
       {children}
     </EditSheetContext.Provider>
   );
@@ -37,5 +37,5 @@ export function useEditSheetContext<TData extends ESRowType>(): EditSheetContext
       "EditSheet compound components must be used within <EditSheet>"
     );
   }
-  return context as EditSheetContextValue<TData>;
+  return context as unknown as EditSheetContextValue<TData>;
 }

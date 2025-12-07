@@ -50,11 +50,11 @@ export function useRulesEditSheetColumns() {
               }}
               onFocus={onFocus}
               disabled={disabled}
-              suggestions={categories?.map((cat) => cat.name) || []}
+              suggestions={categories?.map((cat: { name: string }) => cat.name) || []}
             />
           );
         },
-        validation: (value, row) => {
+        validation: (_value, row) => {
           const rule = row as unknown as RuleRecord;
           if (!rule.category?.name || rule.category.name.trim() === "") {
             return "Category is required";

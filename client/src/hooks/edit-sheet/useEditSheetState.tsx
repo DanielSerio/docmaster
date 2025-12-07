@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import type { EditSheetProps, ESRowType, BatchChanges } from '@/components/edit-sheet/types';
 import { useEditSheetValidation } from './useEditSheetValidation';
 import { useEditSheetKeyboard } from './useEditSheetKeyboard';
@@ -94,6 +94,12 @@ export function useEditSheetState<TData extends ESRowType, TSave = BatchChanges<
   const hasChanges = useMemo(() => {
     return JSON.stringify(localData) !== JSON.stringify(originalData);
   }, [localData, originalData]);
+
+  useEffect(() => {
+    if (mode === 'edit') {
+      validation.validateAll();
+    }
+  }, [mode, localData]);
 
   useEditSheetKeyboard({
     mode,
