@@ -29,11 +29,12 @@ export interface BatchChanges<TData> {
   deletedIds: number[];
 }
 
-export interface EditSheetProps<TData extends ESRowType> {
+export interface EditSheetProps<TData extends ESRowType, TSave = BatchChanges<TData>> {
   data: TData[];
   columns: ESColumnDef<TData>[];
   isLoading?: boolean;
-  onSave: (changes: BatchChanges<TData>) => Promise<void>;
+  onSave: (changes: TSave) => Promise<void>;
+  mapChanges?: (changes: BatchChanges<TData>) => TSave;
   getRowId: (row: TData) => string;
   children?: ReactNode;
 }

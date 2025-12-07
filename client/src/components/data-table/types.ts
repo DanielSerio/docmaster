@@ -49,21 +49,31 @@ export interface DTCellProps extends DTSubComponent {
 }
 
 
-export interface DataTableProps<TData extends DTRowType> {
+export interface DataTableDataProps<TData extends DTRowType> {
   id: string;
   rows: TData[];
   columnDefs: DTColumnDef<TData, unknown>[];
   getRowId: (row: TData) => string;
+}
+
+export interface DataTableUiProps {
   isLoading?: boolean | null;
   skeletonRowCount?: number;
   emptyIcon?: React.ReactNode;
   emptyTitle: string;
   emptyDescription: string;
   children?: React.ReactNode;
+}
+
+export interface DataTableControllerProps {
   pagingController: PagingController;
   filteringController?: FilteringController;
   sortingController?: SortingController;
 }
+
+export type DataTableProps<TData extends DTRowType> = DataTableDataProps<TData> &
+  DataTableUiProps &
+  DataTableControllerProps;
 
 export type DTRowRecord<TData extends object & RowData> = TData & {
   lineNumber: number;

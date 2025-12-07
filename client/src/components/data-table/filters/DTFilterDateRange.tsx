@@ -5,6 +5,7 @@ import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import type { DTFilterProps } from './types';
 import type { DateRange } from 'react-day-picker';
+import { publishRangeValue } from './rangeFilterUtils';
 
 interface DateRangeValue {
   from?: string;
@@ -31,12 +32,7 @@ export function DTFilterDateRange({ value, onChange }: DTFilterProps) {
       to: range.to ? range.to.toISOString().split('T')[0] : undefined
     };
 
-    // If both from and to are undefined, treat as cleared
-    if (!newRange.from && !newRange.to) {
-      onChange(undefined);
-    } else {
-      onChange(newRange);
-    }
+    publishRangeValue(newRange, onChange);
   };
 
   return (

@@ -10,7 +10,7 @@ import type { DTRowType } from '../types';
 import type { DTMetaFilter } from '../filters.types';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import { useMemo, useCallback, memo } from 'react';
+import { useMemo, useCallback } from 'react';
 
 interface FilterColumnProps {
   columnId: string;
@@ -20,7 +20,7 @@ interface FilterColumnProps {
   clearFilter: (columnId: string) => void;
 }
 
-const FilterColumn = memo(function FilterColumn({
+function FilterColumn({
   columnId,
   filterConfig,
   value,
@@ -38,32 +38,61 @@ const FilterColumn = memo(function FilterColumn({
     clearFilter(columnId);
   }, [columnId, clearFilter]);
 
-  const props = useMemo(
-    () => ({
-      columnId,
-      filterConfig,
-      value,
-      onChange,
-      onClear
-    }),
-    [columnId, filterConfig, value, onChange, onClear]
-  );
-
   switch (filterConfig.type) {
     case 'search':
-      return <DTFilterSearch {...props} />;
+      return (
+        <DTFilterSearch
+          columnId={columnId}
+          filterConfig={filterConfig}
+          value={value}
+          onChange={onChange}
+          onClear={onClear}
+        />
+      );
     case 'select':
-      return <DTFilterSelect {...props} />;
+      return (
+        <DTFilterSelect
+          columnId={columnId}
+          filterConfig={filterConfig}
+          value={value}
+          onChange={onChange}
+          onClear={onClear}
+        />
+      );
     case 'multi-select':
-      return <DTFilterMultiSelect {...props} />;
+      return (
+        <DTFilterMultiSelect
+          columnId={columnId}
+          filterConfig={filterConfig}
+          value={value}
+          onChange={onChange}
+          onClear={onClear}
+        />
+      );
     case 'date-range':
-      return <DTFilterDateRange {...props} />;
+      return (
+        <DTFilterDateRange
+          columnId={columnId}
+          filterConfig={filterConfig}
+          value={value}
+          onChange={onChange}
+          onClear={onClear}
+        />
+      );
     case 'number-range':
-      return <DTFilterNumberRange {...props} />;
+      return (
+        <DTFilterNumberRange
+          columnId={columnId}
+          filterConfig={filterConfig}
+          value={value}
+          onChange={onChange}
+          onClear={onClear}
+        />
+      );
     default:
       return null;
   }
-});
+}
 
 export function DTFilter<TData extends DTRowType>() {
   const { table, filteringController } = useDataTableContext<TData>();

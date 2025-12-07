@@ -1,12 +1,14 @@
 import type { PropsWithChildren } from 'react';
-import { cn } from '@/lib/utils';
+import { DTSection } from './DTSection';
 
 interface DTFiltersProps extends PropsWithChildren {
   className?: string;
 }
 
 export function DTFilters({ children, className }: DTFiltersProps) {
-  const classNames = cn('px-4 py-2 border-b', className);
-
-  return <div className={classNames}>{children}</div>;
+  return (
+    <DTSection className={className}>
+      {children}
+    </DTSection>
+  );
 }

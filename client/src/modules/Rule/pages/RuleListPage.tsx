@@ -1,10 +1,7 @@
 import { Page } from "@/components/layout";
 import { EditSheet } from "@/components/edit-sheet";
-import {
-  useRulesQuery,
-  useRulesEditSheetColumns,
-  useBatchUpdateRulesMutation,
-} from "../hooks/rules-edit-sheet";
+import { useRulesQuery, useRulesEditSheetColumns, useBatchUpdateRulesMutation } from "../hooks/rules-edit-sheet";
+import { transformRulePayload } from "../utils/transformRulePayload";
 import type { BatchChanges } from "@/components/edit-sheet";
 import type { RuleRecord } from "../hooks/rules-edit-sheet/useRulesQuery";
 
@@ -14,17 +11,7 @@ export function RuleListPage() {
   const mutation = useBatchUpdateRulesMutation();
 
   const handleSave = async (changes: BatchChanges<RuleRecord>) => {
-    // Transform rules to extract categoryName from category object
-    const transformRule = (rule: RuleRecord) => ({
-      ...rule,
-      categoryName: rule.category?.name || "",
-    });
-
-    await mutation.mutateAsync({
-      newRules: changes.new.map(transformRule),
-      updatedRules: changes.updated.map(transformRule),
-      deletedIds: changes.deletedIds,
-    });
+    await mutation.mutateAsync(transformRulePayload(changes));
   };
 
   return (

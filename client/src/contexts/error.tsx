@@ -58,3 +58,15 @@ export function useError(): ErrorContextValue {
   }
   return context;
 }
+
+export function useErrorReporter() {
+  const context = useContext(ErrorContext);
+  const reportError = useCallback(
+    (error: TRPCClientErrorLike<AppRouter> | ErrorState) => {
+      context?.setError(error);
+    },
+    [context]
+  );
+
+  return { reportError };
+}

@@ -1,5 +1,6 @@
 import { Input } from '@/components/ui/input';
 import type { DTFilterProps } from './types';
+import { publishRangeValue } from './rangeFilterUtils';
 
 interface NumberRangeValue {
   min?: number;
@@ -14,7 +15,7 @@ export function DTFilterNumberRange({ value, onChange }: DTFilterProps) {
       ...range,
       min: min ? Number(min) : undefined
     };
-    onChange(newValue.min !== undefined || newValue.max !== undefined ? newValue : undefined);
+    publishRangeValue(newValue, onChange);
   };
 
   const handleMaxChange = (max: string) => {
@@ -22,7 +23,7 @@ export function DTFilterNumberRange({ value, onChange }: DTFilterProps) {
       ...range,
       max: max ? Number(max) : undefined
     };
-    onChange(newValue.min !== undefined || newValue.max !== undefined ? newValue : undefined);
+    publishRangeValue(newValue, onChange);
   };
 
   return (

@@ -13,8 +13,8 @@ export function useEditSheetValidation<TData extends ESRowType>(
 ) {
   const [errors, setErrors] = useState<ValidationErrors>({});
 
-  const validateRow = useCallback(
-    (rowIndex: number, row: TData): boolean => {
+  const getRowErrors = useCallback(
+    (row: TData) => {
       const rowErrors: { [columnId: string]: string } = {};
 
       columns.forEach((column) => {
@@ -26,6 +26,15 @@ export function useEditSheetValidation<TData extends ESRowType>(
           }
         }
       });
+
+      return rowErrors;
+    },
+    [columns]
+  );
+
+  const validateRow = useCallback(
+    (rowIndex: number, row: TData): boolean => {
+      const rowErrors = getRowErrors(row);
 
       setErrors((prev) => {
         const next = { ...prev };
@@ -39,7 +48,7 @@ export function useEditSheetValidation<TData extends ESRowType>(
 
       return Object.keys(rowErrors).length === 0;
     },
-    [columns]
+    [getRowErrors]
   );
 
   const validateAll = useCallback((): boolean => {
@@ -61,18 +70,10 @@ export function useEditSheetValidation<TData extends ESRowType>(
 
       if (isEmpty && row.__isNew) return; // Skip empty new rows
 
-      const rowErrors: { [columnId: string]: string } = {};
-
-      columns.forEach((column) => {
-        if (column.validation) {
-          const value = row[column.accessorKey];
-          const error = column.validation(value, row);
-          if (error) {
-            rowErrors[column.id] = error;
-            allValid = false;
-          }
-        }
-      });
+      const rowErrors = getRowErrors(row);
+      if (Object.keys(rowErrors).length > 0) {
+        allValid = false;
+      }
 
       if (Object.keys(rowErrors).length > 0) {
         newErrors[String(rowIndex)] = rowErrors;
@@ -81,7 +82,7 @@ export function useEditSheetValidation<TData extends ESRowType>(
 
     setErrors(newErrors);
     return allValid;
-  }, [data, columns]);
+  }, [data, getRowErrors]);
 
   const getFieldError = useCallback(
     (rowIndex: number, columnId: string): string | undefined => {
