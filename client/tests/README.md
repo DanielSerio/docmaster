@@ -148,18 +148,19 @@ Tests for the rules EditSheet component including:
 - Creating new rules with category type-ahead
 - Editing existing rules
 - Deleting rules
+- **Batch save operations** - creating, updating, and deleting multiple rules in a single save operation
 - Validation (required fields, priority range)
 - Canceling changes with confirmation
 - Using existing categories from suggestions
-- Keyboard shortcuts (Escape, Ctrl+S)
+- Keyboard shortcuts (Escape)
 - Loading states during save
 
-### Health Check (`integration/health-check.spec.ts`)
+### Application Integration (`integration/application-integration.spec.ts`)
 
-Tests for the server health check endpoint including:
-- Displaying health status
-- Loading states
-- Error handling
+Tests for core application functionality including:
+- Root path redirect to `/documents`
+- Documents page loads successfully
+- Rules page loads successfully via direct navigation
 
 ## Debugging Tests
 

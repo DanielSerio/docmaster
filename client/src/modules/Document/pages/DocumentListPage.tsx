@@ -38,7 +38,7 @@ export function DocumentListPage() {
       >
         <DataTable.TitleBar>
           <div className="flex items-center justify-between py-2">
-            <h1 className="text-xl font-medium">Documents</h1>
+            <h1 className="text-xl font-medium" data-testid="page-heading">Documents</h1>
             <Button
               asChild
               className="cursor-pointer"

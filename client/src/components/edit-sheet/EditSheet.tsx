@@ -1,11 +1,13 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Table } from "@/components/ui/table";
 import { ESToolbar } from "./subcomponents/ESToolbar";
 import { ESTableHeader } from "./subcomponents/ESTableHeader";
 import { ESTableBody } from "./subcomponents/ESTableBody";
 import { EditSheetNavigator } from "./subcomponents/EditSheetNavigator";
 import { EditSheetProvider } from "./EditSheetContext";
-import { useEditSheetValidation } from "./hooks/useEditSheetValidation";
+import { useEditSheetValidation } from "@/hooks/edit-sheet/useEditSheetValidation";
+import { useEditSheetKeyboard } from "./useEditSheetKeyboard";
+import { isRowEmpty } from "./utils";
 import type { EditSheetProps, ESRowType, BatchChanges } from "./types";
 
 function EditSheetRoot<TData extends ESRowType>({
@@ -84,17 +86,6 @@ function EditSheetRoot<TData extends ESRowType>({
     });
   }, []);
 
-  const isRowEmpty = useCallback((row: TData): boolean => {
-    // Check if a row has any meaningful data
-    const keys = Object.keys(row).filter(
-      (key) => key !== "__isNew" && key !== "__isDeleted" && key !== "id"
-    );
-    return keys.every((key) => {
-      const value = row[key as keyof TData];
-      return value === undefined || value === null || value === "";
-    });
-  }, []);
-
   const handleSave = async () => {
     // Validate all rows before saving
     const isValid = validation.validateAll();
@@ -132,28 +123,13 @@ function EditSheetRoot<TData extends ESRowType>({
   }, [localData, originalData]);
 
   // Keyboard shortcuts
-  useEffect(() => {
-    if (mode !== "edit") return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Escape to cancel
-      if (e.key === "Escape") {
-        e.preventDefault();
-        handleCancel();
-      }
-
-      // Ctrl+S or Cmd+S to save
-      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
-        e.preventDefault();
-        if (validation.isValid && !isSaving) {
-          handleSave();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [mode, validation.isValid, isSaving]);
+  useEditSheetKeyboard({
+    mode,
+    isValid: validation.isValid,
+    isSaving,
+    onCancel: handleCancel,
+    onSave: handleSave,
+  });
 
   const contextValue = useMemo(
     () => ({

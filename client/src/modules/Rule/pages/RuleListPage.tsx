@@ -6,15 +6,16 @@ import {
   useBatchUpdateRulesMutation,
 } from "../hooks/rules-edit-sheet";
 import type { BatchChanges } from "@/components/edit-sheet";
+import type { RuleRecord } from "../hooks/rules-edit-sheet/useRulesQuery";
 
 export function RuleListPage() {
   const rulesQuery = useRulesQuery();
   const columns = useRulesEditSheetColumns();
   const mutation = useBatchUpdateRulesMutation();
 
-  const handleSave = async (changes: BatchChanges<unknown>) => {
+  const handleSave = async (changes: BatchChanges<RuleRecord>) => {
     // Transform rules to extract categoryName from category object
-    const transformRule = (rule: any) => ({
+    const transformRule = (rule: RuleRecord) => ({
       ...rule,
       categoryName: rule.category?.name || "",
     });
@@ -29,7 +30,7 @@ export function RuleListPage() {
   return (
     <Page>
       <div className="p-6">
-        <h1 className="text-2xl font-semibold mb-6">Rules</h1>
+        <h1 className="text-2xl font-semibold mb-6" data-testid="page-heading">Rules</h1>
         <EditSheet
           data={rulesQuery.data || []}
           columns={columns}

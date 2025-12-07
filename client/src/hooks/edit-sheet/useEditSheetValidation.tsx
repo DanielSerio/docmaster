@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import type { ESColumnDef, ESRowType } from "../types";
+import { useState, useCallback } from "react";
+import type { ESColumnDef, ESRowType } from "@/components/edit-sheet/types";
 
 interface ValidationErrors {
   [rowIndex: string]: {

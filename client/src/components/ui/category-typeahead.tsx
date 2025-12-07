@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Check, ChevronsUpDown, Plus } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -40,12 +40,6 @@ export function CategoryTypeAhead({
   const filteredSuggestions = suggestions.filter((suggestion) =>
     suggestion.toLowerCase().includes(inputValue.toLowerCase())
   );
-
-  // Check if input exactly matches an existing suggestion
-  const exactMatch = suggestions.some((s) => s.toLowerCase() === inputValue.toLowerCase());
-
-  // Show "Create new" option if there's input and no exact match
-  const showCreateNew = inputValue.trim() && !exactMatch;
 
   const handleSelect = (selectedValue: string) => {
     setInputValue(selectedValue);
@@ -99,8 +93,8 @@ export function CategoryTypeAhead({
             data-testid="category-typeahead-input"
           />
           <CommandList className="w-full">
-            {filteredSuggestions.length === 0 && !showCreateNew && (
-              <CommandEmpty>No categories found.</CommandEmpty>
+            {filteredSuggestions.length === 0 && (
+              <CommandEmpty>Type to create new category</CommandEmpty>
             )}
             {filteredSuggestions.length > 0 && (
               <CommandGroup heading="Existing Categories">
@@ -120,18 +114,6 @@ export function CategoryTypeAhead({
                     {suggestion}
                   </CommandItem>
                 ))}
-              </CommandGroup>
-            )}
-            {showCreateNew && (
-              <CommandGroup heading="Create New">
-                <CommandItem
-                  value={inputValue}
-                  onSelect={() => handleSelect(inputValue)}
-                  data-testid="category-create-new"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create new: <strong className="ml-1">{inputValue}</strong>
-                </CommandItem>
               </CommandGroup>
             )}
           </CommandList>
