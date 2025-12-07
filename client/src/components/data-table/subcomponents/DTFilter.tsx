@@ -20,22 +20,34 @@ interface FilterColumnProps {
   clearFilter: (columnId: string) => void;
 }
 
-const FilterColumn = memo(function FilterColumn({ columnId, filterConfig, value, setFilter, clearFilter }: FilterColumnProps) {
-  const onChange = useCallback((newValue: unknown) => {
-    setFilter(columnId, newValue);
-  }, [columnId, setFilter]);
+const FilterColumn = memo(function FilterColumn({
+  columnId,
+  filterConfig,
+  value,
+  setFilter,
+  clearFilter
+}: FilterColumnProps) {
+  const onChange = useCallback(
+    (newValue: unknown) => {
+      setFilter(columnId, newValue);
+    },
+    [columnId, setFilter]
+  );
 
   const onClear = useCallback(() => {
     clearFilter(columnId);
   }, [columnId, clearFilter]);
 
-  const props = useMemo(() => ({
-    columnId,
-    filterConfig,
-    value,
-    onChange,
-    onClear
-  }), [columnId, filterConfig, value, onChange, onClear]);
+  const props = useMemo(
+    () => ({
+      columnId,
+      filterConfig,
+      value,
+      onChange,
+      onClear
+    }),
+    [columnId, filterConfig, value, onChange, onClear]
+  );
 
   switch (filterConfig.type) {
     case 'search':
@@ -60,7 +72,8 @@ export function DTFilter<TData extends DTRowType>() {
     return null;
   }
 
-  const [columnFilters, , { setFilter, clearFilter, getFilter, clearAllFilters }] = filteringController;
+  const [columnFilters, , { setFilter, clearFilter, getFilter, clearAllFilters }] =
+    filteringController;
 
   const filterableColumns = useMemo(() => {
     return table.getAllColumns().filter((column) => {
@@ -83,11 +96,12 @@ export function DTFilter<TData extends DTRowType>() {
         const value = getFilter(column.id);
 
         return (
-          <div key={column.id} className="flex flex-col gap-1">
+          <div
+            key={column.id}
+            className="flex flex-col gap-1"
+          >
             <label className="text-xs font-medium text-muted-foreground">
-              {typeof column.columnDef.header === 'string'
-                ? column.columnDef.header
-                : column.id}
+              {typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id}
             </label>
             <FilterColumn
               columnId={column.id}
@@ -100,7 +114,12 @@ export function DTFilter<TData extends DTRowType>() {
         );
       })}
       {hasActiveFilters && (
-        <Button variant="ghost" size="sm" onClick={clearAllFilters} className="h-8">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={clearAllFilters}
+          className="h-8"
+        >
           <X className="h-4 w-4 mr-1" />
           Clear All
         </Button>

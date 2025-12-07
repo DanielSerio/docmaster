@@ -12,7 +12,7 @@ export interface ESColumnDef<TData extends ESRowType> {
   id: string;
   accessorKey: keyof TData;
   header: string;
-  viewCell: (props: { row: TData; value: unknown }) => ReactNode;
+  viewCell: (props: { row: TData; value: unknown; }) => ReactNode;
   editCell: (props: {
     row: TData;
     value: unknown;

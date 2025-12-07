@@ -9,7 +9,7 @@ import { DTFilter } from './subcomponents/DTFilter';
 import type { DataTableProps, DTRowType } from './types';
 import { Children, isValidElement, useMemo, useState, useCallback } from 'react';
 import { getInitialVisibilityState, getTableGrid } from './utils';
-import { DataTableProvider } from './DataTableContext';
+import { DataTableProvider, type DataTableContextValue } from './DataTableContext';
 import { DTPagination } from './subcomponents/DTPagination';
 
 function DataTableRoot<TData extends DTRowType>({
@@ -86,12 +86,12 @@ function DataTableRoot<TData extends DTRowType>({
     );
   }, [children]);
 
-  const contextValue = useMemo(() => ({
+  const contextValue: DataTableContextValue<TData> = {
     table,
     gridTemplateColumns,
     filteringController,
     sortingController
-  }), [table, gridTemplateColumns, filteringController, sortingController]);
+  };
 
   return (
     <DataTableProvider value={contextValue}>

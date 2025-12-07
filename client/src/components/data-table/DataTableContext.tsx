@@ -3,14 +3,16 @@ import type { Table } from '@tanstack/react-table';
 import type { DTRowType } from './types';
 import type { FilteringController, SortingController } from '@/hooks/data-table';
 
-interface DataTableContextValue<TData extends DTRowType> {
+export interface DataTableContextValue<TData extends DTRowType> {
   table: Table<TData>;
   gridTemplateColumns: string;
   filteringController?: FilteringController;
   sortingController?: SortingController;
 }
 
-const DataTableContext = createContext<DataTableContextValue<DTRowType> | null>(null);
+type DataTableContextStore = DataTableContextValue<DTRowType>;
+
+const DataTableContext = createContext<DataTableContextStore | null>(null);
 
 export function DataTableProvider<TData extends DTRowType>({
   value,
@@ -20,7 +22,7 @@ export function DataTableProvider<TData extends DTRowType>({
   children: React.ReactNode;
 }) {
   return (
-    <DataTableContext.Provider value={value as unknown as DataTableContextValue<DTRowType>}>
+    <DataTableContext.Provider value={value as DataTableContextStore}>
       {children}
     </DataTableContext.Provider>
   );
@@ -31,5 +33,5 @@ export function useDataTableContext<TData extends DTRowType>(): DataTableContext
   if (!context) {
     throw new Error('DataTable compound components must be used within <DataTable>');
   }
-  return context as unknown as DataTableContextValue<TData>;
+  return context as DataTableContextValue<TData>;
 }

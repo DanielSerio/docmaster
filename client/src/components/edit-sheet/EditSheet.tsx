@@ -1,23 +1,23 @@
-import { useState, useMemo, useCallback } from "react";
-import { Table } from "@/components/ui/table";
-import { ESToolbar } from "./subcomponents/ESToolbar";
-import { ESTableHeader } from "./subcomponents/ESTableHeader";
-import { ESTableBody } from "./subcomponents/ESTableBody";
-import { EditSheetNavigator } from "./subcomponents/EditSheetNavigator";
-import { EditSheetProvider } from "./EditSheetContext";
-import { useEditSheetValidation } from "@/hooks/edit-sheet/useEditSheetValidation";
-import { useEditSheetKeyboard } from "./useEditSheetKeyboard";
-import { isRowEmpty } from "./utils";
-import type { EditSheetProps, ESRowType, BatchChanges } from "./types";
+import { useState, useMemo, useCallback } from 'react';
+import { Table } from '@/components/ui/table';
+import { ESToolbar } from './subcomponents/ESToolbar';
+import { ESTableHeader } from './subcomponents/ESTableHeader';
+import { ESTableBody } from './subcomponents/ESTableBody';
+import { EditSheetNavigator } from './subcomponents/EditSheetNavigator';
+import { EditSheetProvider } from './EditSheetContext';
+import { useEditSheetValidation } from '@/hooks/edit-sheet/useEditSheetValidation';
+import { useEditSheetKeyboard } from './useEditSheetKeyboard';
+import { isRowEmpty } from './utils';
+import type { EditSheetProps, ESRowType, BatchChanges } from './types';
 
 function EditSheetRoot<TData extends ESRowType>({
   data,
   columns,
   isLoading,
   onSave,
-  getRowId,
+  getRowId
 }: EditSheetProps<TData>) {
-  const [mode, setMode] = useState<"view" | "edit">("view");
+  const [mode, setMode] = useState<'view' | 'edit'>('view');
   const [localData, setLocalData] = useState<TData[]>(data);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -32,7 +32,7 @@ function EditSheetRoot<TData extends ESRowType>({
   }, []);
 
   const enterEditMode = () => {
-    setMode("edit");
+    setMode('edit');
     setOriginalData([...data]);
     // Add an empty row at the bottom when entering edit mode
     setLocalData([...data, createEmptyRow()]);
@@ -40,7 +40,7 @@ function EditSheetRoot<TData extends ESRowType>({
   };
 
   const exitEditMode = () => {
-    setMode("view");
+    setMode('view');
     setLocalData(data);
     validation.clearErrors();
   };
@@ -50,16 +50,13 @@ function EditSheetRoot<TData extends ESRowType>({
     exitEditMode();
   };
 
-  const handleRowChange = useCallback(
-    (rowIndex: number, field: keyof TData, value: unknown) => {
-      setLocalData((prev) => {
-        const updated = [...prev];
-        updated[rowIndex] = { ...updated[rowIndex], [field]: value };
-        return updated;
-      });
-    },
-    []
-  );
+  const handleRowChange = useCallback((rowIndex: number, field: keyof TData, value: unknown) => {
+    setLocalData((prev) => {
+      const updated = [...prev];
+      updated[rowIndex] = { ...updated[rowIndex], [field]: value };
+      return updated;
+    });
+  }, []);
 
   const handleCellFocus = useCallback(
     (rowIndex: number) => {
@@ -90,21 +87,15 @@ function EditSheetRoot<TData extends ESRowType>({
     // Validate all rows before saving
     const isValid = validation.validateAll();
     if (!isValid) {
-      console.error("Validation failed");
+      console.error('Validation failed');
       return;
     }
 
     // Compute changes, filtering out empty rows
     const changes: BatchChanges<TData> = {
-      new: localData.filter(
-        (row) => row.__isNew && !row.__isDeleted && !isRowEmpty(row)
-      ),
-      updated: localData.filter(
-        (row) => !row.__isNew && !row.__isDeleted && row.id
-      ),
-      deletedIds: localData
-        .filter((row) => row.__isDeleted && row.id)
-        .map((row) => row.id!),
+      new: localData.filter((row) => row.__isNew && !row.__isDeleted && !isRowEmpty(row)),
+      updated: localData.filter((row) => !row.__isNew && !row.__isDeleted && row.id),
+      deletedIds: localData.filter((row) => row.__isDeleted && row.id).map((row) => row.id!)
     };
 
     try {
@@ -112,7 +103,7 @@ function EditSheetRoot<TData extends ESRowType>({
       await onSave(changes);
       exitEditMode();
     } catch (error) {
-      console.error("Save failed:", error);
+      console.error('Save failed:', error);
     } finally {
       setIsSaving(false);
     }
@@ -128,7 +119,7 @@ function EditSheetRoot<TData extends ESRowType>({
     isValid: validation.isValid,
     isSaving,
     onCancel: handleCancel,
-    onSave: handleSave,
+    onSave: handleSave
   });
 
   const contextValue = useMemo(
@@ -140,7 +131,7 @@ function EditSheetRoot<TData extends ESRowType>({
       onRowDelete: handleRowDelete,
       onCellFocus: handleCellFocus,
       getRowId,
-      getFieldError: validation.getFieldError,
+      getFieldError: validation.getFieldError
     }),
     [
       mode,
@@ -150,7 +141,7 @@ function EditSheetRoot<TData extends ESRowType>({
       handleRowDelete,
       handleCellFocus,
       getRowId,
-      validation.getFieldError,
+      validation.getFieldError
     ]
   );
 

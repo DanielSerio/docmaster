@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import type { EditMode, ESRowType, ESColumnDef } from "./types";
 
-interface EditSheetContextValue<TData extends ESRowType> {
+export interface EditSheetContextValue<TData extends ESRowType> {
   mode: EditMode;
   data: TData[];
   columns: ESColumnDef<TData>[];
@@ -12,9 +12,9 @@ interface EditSheetContextValue<TData extends ESRowType> {
   getFieldError: (rowIndex: number, columnId: string) => string | undefined;
 }
 
-const EditSheetContext = createContext<EditSheetContextValue<ESRowType> | null>(
-  null
-);
+type EditSheetContextStore = EditSheetContextValue<ESRowType>;
+
+const EditSheetContext = createContext<EditSheetContextStore | null>(null);
 
 export function EditSheetProvider<TData extends ESRowType>({
   value,
@@ -24,9 +24,7 @@ export function EditSheetProvider<TData extends ESRowType>({
   children: React.ReactNode;
 }) {
   return (
-    <EditSheetContext.Provider
-      value={value as unknown as EditSheetContextValue<ESRowType>}
-    >
+    <EditSheetContext.Provider value={value as EditSheetContextStore}>
       {children}
     </EditSheetContext.Provider>
   );
@@ -39,5 +37,5 @@ export function useEditSheetContext<TData extends ESRowType>(): EditSheetContext
       "EditSheet compound components must be used within <EditSheet>"
     );
   }
-  return context as unknown as EditSheetContextValue<TData>;
+  return context as EditSheetContextValue<TData>;
 }

@@ -1,7 +1,7 @@
-import { TableBody, TableRow, TableCell } from "@/components/ui/table";
-import { useEditSheetContext } from "../EditSheetContext";
-import type { ESRowType } from "../types";
-import { ESActions } from "./ESActions";
+import { TableBody, TableRow, TableCell } from '@/components/ui/table';
+import { useEditSheetContext } from '../EditSheetContext';
+import type { ESRowType } from '../types';
+import { ESActions } from './ESActions';
 
 export function ESTableBody<TData extends ESRowType>() {
   const { mode, data, columns, onRowChange, onCellFocus, getRowId, getFieldError } =
@@ -12,7 +12,7 @@ export function ESTableBody<TData extends ESRowType>() {
       <TableBody>
         <TableRow>
           <TableCell
-            colSpan={mode === "edit" ? columns.length + 1 : columns.length}
+            colSpan={mode === 'edit' ? columns.length + 1 : columns.length}
             className="h-24 text-center"
           >
             No data available.
@@ -30,7 +30,7 @@ export function ESTableBody<TData extends ESRowType>() {
         return (
           <TableRow
             key={getRowId(row)}
-            className={isDeleted ? "opacity-50 line-through" : ""}
+            className={isDeleted ? 'opacity-50 line-through' : ''}
             data-testid={`edit-sheet-row-${rowIndex}`}
           >
             {columns.map((column, colIndex) => {
@@ -46,7 +46,7 @@ export function ESTableBody<TData extends ESRowType>() {
                   className="align-top"
                 >
                   <div className="flex flex-col gap-1">
-                    {mode === "view"
+                    {mode === 'view'
                       ? column.viewCell({ row, value })
                       : column.editCell({
                           row,
@@ -54,19 +54,17 @@ export function ESTableBody<TData extends ESRowType>() {
                           onChange: (newValue) =>
                             onRowChange(rowIndex, column.accessorKey, newValue),
                           onFocus: () => onCellFocus(rowIndex),
-                          disabled: isDeleted,
+                          disabled: isDeleted
                         })}
-                    {error && mode === "edit" && (
-                      <span className="text-xs text-destructive">
-                        {error}
-                      </span>
+                    {error && mode === 'edit' && (
+                      <span className="text-xs text-destructive">{error}</span>
                     )}
                   </div>
                 </TableCell>
               );
             })}
 
-            {mode === "edit" && (
+            {mode === 'edit' && (
               <TableCell>
                 <ESActions
                   rowIndex={rowIndex}

@@ -1,7 +1,6 @@
-import { Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useEditSheetContext } from "../EditSheetContext";
-import type { ESRowType } from "../types";
+import { Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useEditSheetContext } from '../EditSheetContext';
 
 interface ESActionsProps {
   rowIndex: number;
@@ -9,7 +8,7 @@ interface ESActionsProps {
 }
 
 export function ESActions({ rowIndex, disabled }: ESActionsProps) {
-  const { onRowDelete } = useEditSheetContext<ESRowType>();
+  const { onRowDelete } = useEditSheetContext();
 
   return (
     <Button
