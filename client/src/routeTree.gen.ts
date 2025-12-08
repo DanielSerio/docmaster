@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TextblocksIndexRouteImport } from './routes/textblocks/index'
 import { Route as RulesIndexRouteImport } from './routes/rules/index'
 import { Route as DocumentsIndexRouteImport } from './routes/documents/index'
 import { Route as CollectionsIndexRouteImport } from './routes/collections/index'
@@ -29,6 +30,11 @@ import { Route as CollectionsCollectionIdDownloadRouteImport } from './routes/co
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TextblocksIndexRoute = TextblocksIndexRouteImport.update({
+  id: '/textblocks/',
+  path: '/textblocks/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RulesIndexRoute = RulesIndexRouteImport.update({
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/collections': typeof CollectionsIndexRoute
   '/documents': typeof DocumentsIndexRoute
   '/rules': typeof RulesIndexRoute
+  '/textblocks': typeof TextblocksIndexRoute
   '/collections/$collectionId/download': typeof CollectionsCollectionIdDownloadRoute
   '/documents/$id/blocks': typeof DocumentsIdBlocksRoute
   '/documents/$id/edit': typeof DocumentsIdEditRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/collections': typeof CollectionsIndexRoute
   '/documents': typeof DocumentsIndexRoute
   '/rules': typeof RulesIndexRoute
+  '/textblocks': typeof TextblocksIndexRoute
   '/collections/$collectionId/download': typeof CollectionsCollectionIdDownloadRoute
   '/documents/$id/blocks': typeof DocumentsIdBlocksRoute
   '/documents/$id/edit': typeof DocumentsIdEditRoute
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/collections/': typeof CollectionsIndexRoute
   '/documents/': typeof DocumentsIndexRoute
   '/rules/': typeof RulesIndexRoute
+  '/textblocks/': typeof TextblocksIndexRoute
   '/collections/$collectionId/download': typeof CollectionsCollectionIdDownloadRoute
   '/documents/$id/blocks': typeof DocumentsIdBlocksRoute
   '/documents/$id/edit': typeof DocumentsIdEditRoute
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/collections'
     | '/documents'
     | '/rules'
+    | '/textblocks'
     | '/collections/$collectionId/download'
     | '/documents/$id/blocks'
     | '/documents/$id/edit'
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/collections'
     | '/documents'
     | '/rules'
+    | '/textblocks'
     | '/collections/$collectionId/download'
     | '/documents/$id/blocks'
     | '/documents/$id/edit'
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/collections/'
     | '/documents/'
     | '/rules/'
+    | '/textblocks/'
     | '/collections/$collectionId/download'
     | '/documents/$id/blocks'
     | '/documents/$id/edit'
@@ -232,6 +244,7 @@ export interface RootRouteChildren {
   CollectionsIndexRoute: typeof CollectionsIndexRoute
   DocumentsIndexRoute: typeof DocumentsIndexRoute
   RulesIndexRoute: typeof RulesIndexRoute
+  TextblocksIndexRoute: typeof TextblocksIndexRoute
   CollectionsCollectionIdDownloadRoute: typeof CollectionsCollectionIdDownloadRoute
   DocumentsIdBlocksRoute: typeof DocumentsIdBlocksRoute
   DocumentsIdEditRoute: typeof DocumentsIdEditRoute
@@ -247,6 +260,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/textblocks/': {
+      id: '/textblocks/'
+      path: '/textblocks'
+      fullPath: '/textblocks'
+      preLoaderRoute: typeof TextblocksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rules/': {
@@ -368,6 +388,7 @@ const rootRouteChildren: RootRouteChildren = {
   CollectionsIndexRoute: CollectionsIndexRoute,
   DocumentsIndexRoute: DocumentsIndexRoute,
   RulesIndexRoute: RulesIndexRoute,
+  TextblocksIndexRoute: TextblocksIndexRoute,
   CollectionsCollectionIdDownloadRoute: CollectionsCollectionIdDownloadRoute,
   DocumentsIdBlocksRoute: DocumentsIdBlocksRoute,
   DocumentsIdEditRoute: DocumentsIdEditRoute,

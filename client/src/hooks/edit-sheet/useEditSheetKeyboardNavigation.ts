@@ -21,6 +21,11 @@ export function useEditSheetKeyboardNavigation({
 
       if (!target.matches("input, select, button, textarea")) return;
 
+      // For textarea elements, only navigate with Shift+Arrow
+      // This allows arrow keys to work normally for text editing
+      const isTextarea = target instanceof HTMLTextAreaElement;
+      if (isTextarea && !e.shiftKey) return;
+
       const cell = target.closest("td");
       if (!cell) return;
 

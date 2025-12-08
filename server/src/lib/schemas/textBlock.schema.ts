@@ -42,6 +42,20 @@ export const deleteManyTextBlocksInputSchema = z.object({
   ids: z.array(idSchema).min(1, getMessage("ids", "arrayMin"))
 });
 
+// Schema for batch update items (includes id for identification)
+export const batchUpdateTextBlockItemSchema = z.object({
+  id: idSchema,
+  rawContent: rawContentSchema,
+  defaultPriority: defaultPrioritySchema
+});
+
+export const batchUpdateTextBlocksInputSchema = z.object({
+  newTextBlocks: z.array(createTextBlockInputSchema).default([]),
+  updatedTextBlocks: z.array(batchUpdateTextBlockItemSchema).default([]),
+  deletedIds: z.array(idSchema).default([])
+});
+
 export type GetTextBlockByIdInput = z.infer<typeof getTextBlockByIdInputSchema>;
 export type DeleteTextBlockInput = z.infer<typeof deleteTextBlockInputSchema>;
 export type DeleteManyTextBlocksInput = z.infer<typeof deleteManyTextBlocksInputSchema>;
+export type BatchUpdateTextBlocksInput = z.infer<typeof batchUpdateTextBlocksInputSchema>;
