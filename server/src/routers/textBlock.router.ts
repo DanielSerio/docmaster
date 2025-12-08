@@ -7,6 +7,7 @@ import {
   updateTextBlockInputSchema,
   deleteTextBlockInputSchema,
   textBlockIdSchema,
+  batchUpdateTextBlocksInputSchema,
 } from "../lib/schemas/index.js";
 
 export const textBlockRouter = router({
@@ -45,5 +46,12 @@ export const textBlockRouter = router({
     .output(textBlockSchema)
     .mutation(async ({ input }) => {
       return await textBlockService.deleteTextBlock(input.id);
+    }),
+
+  batchUpdate: publicProcedure
+    .input(batchUpdateTextBlocksInputSchema)
+    .output(z.array(textBlockSchema))
+    .mutation(async ({ input }) => {
+      return await textBlockService.batchUpdateTextBlocks(input);
     }),
 });

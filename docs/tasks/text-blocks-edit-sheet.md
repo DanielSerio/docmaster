@@ -1,12 +1,12 @@
-- [ ] Create `textBlock.batchUpdate` tRPC endpoint in server (create/update/delete arrays).
-- [ ] Scaffold text-blocks list page with edit/view toggle matching rules edit sheet UX.
-- [ ] Add text-blocks edit sheet columns: content (textarea) and priority (number input) - NO category.
-- [ ] Implement textarea with Shift+Arrow navigation (arrow keys for text editing, Shift+Arrow for table nav).
-- [ ] Implement CRUD batch handling (create/update/delete) via edit sheet save flow.
-- [ ] Wire validation: rawContent required (not empty), defaultPriority 1-100 range.
-- [ ] Add keyboard navigation and sentinel row handling identical to rules sheet.
-- [ ] Create hooks: `useTextBlocksQuery`, `useTextBlocksEditSheetColumns`, `useBatchUpdateTextBlocksMutation`.
-- [ ] Add `/text-blocks` route to application router.
+- [x] Create `textBlock.batchUpdate` tRPC endpoint in server (create/update/delete arrays).
+- [x] Scaffold text-blocks list page with edit/view toggle matching rules edit sheet UX.
+- [x] Add text-blocks edit sheet columns: content (textarea) and priority (number input) - NO category.
+- [x] Implement textarea with Shift+Arrow navigation (arrow keys for text editing, Shift+Arrow for table nav).
+- [x] Implement CRUD batch handling (create/update/delete) via edit sheet save flow.
+- [x] Wire validation: rawContent required (not empty), defaultPriority 1-100 range.
+- [x] Add keyboard navigation and sentinel row handling identical to rules sheet.
+- [x] Create hooks: `useTextBlocksQuery`, `useTextBlocksEditSheetColumns`, `useBatchUpdateTextBlocksMutation`.
+- [x] Add `/text-blocks` route to application router.
 - [ ] Add integration test coverage mirroring rules edit sheet scenarios (including Shift+Arrow textarea nav).
 - [ ] Verify Save disabled until meaningful valid changes; verify cancel confirmation.
 - [ ] Ensure UI parity (toolbars, loading, error handling) with rules edit sheet.
