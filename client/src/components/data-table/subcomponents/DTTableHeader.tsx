@@ -11,7 +11,7 @@ export function DTTableHeader<TData extends DTRowType>({
   table,
   gridTemplateColumns
 }: DTHeaderProps<TData>) {
-  const { sortingController } = useDataTableContext<TData>();
+  const { sortingController } = useDataTableContext();
   const [sorting] = sortingController || [[]];
 
   const handleSort = (columnId: string, event: React.MouseEvent) => {

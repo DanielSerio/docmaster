@@ -1,12 +1,11 @@
 import type { PagingType, PagingMethods } from '@/hooks/data-table';
 import { trpc } from '@/lib/trpc/react';
-import type { ErrorContextValue } from '@/contexts/error';
 import type { ColumnFiltersState, SortingState } from '@tanstack/react-table';
 import { useEffect } from 'react';
 
 export function useDocumentListQuery(
   paging: Omit<PagingType, 'totalPages'>,
-  setError: ErrorContextValue['setError'],
+  onError: (error: unknown) => void,
   setTotalPages: PagingMethods['setTotalPages'],
   filters: ColumnFiltersState = [],
   sorting: SortingState = []
@@ -19,9 +18,9 @@ export function useDocumentListQuery(
 
   useEffect(() => {
     if (query.error) {
-      setError(query.error);
+      onError(query.error);
     }
-  }, [query.error, setError]);
+  }, [query.error, onError]);
 
   useEffect(() => {
     if (query.data?.paging) {

@@ -21,3 +21,25 @@ To maintain a compact feel, we will use a reduced spacing.
 ## Icons
 
 Icons should generally be small, but remain legible. Icons should be used liberally to enhance the UI.
+
+### Button Icon Placement
+
+When buttons include both text and icons, the icon should be placed **after** the text content, not before. This creates a consistent visual pattern across the application and matches the style of the AsyncButton component.
+
+**Correct:**
+```tsx
+<Button>
+  Save
+  <Save className="h-4 w-4" />
+</Button>
+```
+
+**Incorrect:**
+```tsx
+<Button>
+  <Save className="h-4 w-4" />
+  Save
+</Button>
+```
+
+This pattern applies to all button variants including AsyncButton, which automatically positions the icon (or spinner during loading) after the button text.

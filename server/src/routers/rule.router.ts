@@ -7,6 +7,7 @@ import {
   updateRuleInputSchema,
   deleteRuleInputSchema,
   ruleIdSchema,
+  batchUpdateRulesInputSchema,
 } from "../lib/schemas/index.js";
 
 export const ruleRouter = router({
@@ -45,5 +46,12 @@ export const ruleRouter = router({
     .output(ruleWithCategorySchema)
     .mutation(async ({ input }) => {
       return await ruleService.deleteRule(input.id);
+    }),
+
+  batchUpdate: publicProcedure
+    .input(batchUpdateRulesInputSchema)
+    .output(z.array(ruleWithCategorySchema))
+    .mutation(async ({ input }) => {
+      return await ruleService.batchUpdateRules(input);
     }),
 });

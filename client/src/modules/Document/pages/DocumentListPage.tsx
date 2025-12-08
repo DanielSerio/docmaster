@@ -1,6 +1,6 @@
 import { Page } from '@/components/layout';
 import { DataTable } from '@/components/data-table';
-import { useDataTablePaging, useDataTableRows, useDataTableFiltering, useDataTableSorting } from '@/hooks/data-table';
+import { useDataTableRows, useDataTableControllers } from '@/hooks/data-table';
 import {
   useDocumentListQuery,
   useDocumentTableColumns
@@ -8,17 +8,20 @@ import {
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { useError } from '@/contexts/error';
+import { useErrorReporter } from '@/contexts/error';
 
 export function DocumentListPage() {
-  const { setError } = useError();
-  const pagingController = useDataTablePaging();
-  const [pagination, { setTotalPages }] = pagingController;
-  const filteringController = useDataTableFiltering();
-  const [columnFilters] = filteringController;
-  const sortingController = useDataTableSorting();
-  const [sorting] = sortingController;
-  const listQuery = useDocumentListQuery(pagination, setError, setTotalPages, columnFilters, sorting);
+  const { reportError } = useErrorReporter();
+  const {
+    pagingController,
+    pagination,
+    setTotalPages,
+    filteringController,
+    columnFilters,
+    sortingController,
+    sorting
+  } = useDataTableControllers();
+  const listQuery = useDocumentListQuery(pagination, reportError, setTotalPages, columnFilters, sorting);
   const rows = useDataTableRows(listQuery.data?.results);
   const columnDefs = useDocumentTableColumns();
 
@@ -38,7 +41,7 @@ export function DocumentListPage() {
       >
         <DataTable.TitleBar>
           <div className="flex items-center justify-between py-2">
-            <h1 className="text-xl font-medium">Documents</h1>
+            <h1 className="text-xl font-medium" data-testid="page-heading">Documents</h1>
             <Button
               asChild
               className="cursor-pointer"
