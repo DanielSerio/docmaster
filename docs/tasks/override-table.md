@@ -1,0 +1,9 @@
+- [ ] Add override table UI with view/edit modes mirroring the edit sheet pattern.
+- [ ] Display associated entities for general documents (text blocks) with columns for priority and enable/disable toggle.
+- [ ] Wire Save/Cancel toolbar behavior and disable Save until meaningful valid changes exist.
+- [ ] Implement validation for priority range and required fields; prevent saving deleted/empty rows.
+- [ ] Hook up data loading and batch save endpoints for per-document overrides (create/update/delete or update-only as applicable).
+- [ ] Ensure keyboard navigation and sentinel row handling match existing edit sheet UX.
+- [ ] Add integration tests covering view/edit mode toggling, priority edits, enable/disable toggles, cancel confirmation, and disabled Save when invalid.
+- [ ] Confirm behavior for general documents (text blocks); defer rule document overrides.
+- [ ] Ensure the override table fetches/join includes rule/text-block content (e.g., rawContent/title) so the content column is meaningful rather than an ID-only display.
