@@ -7,6 +7,6 @@
 - [x] Add keyboard navigation and sentinel row handling identical to rules sheet.
 - [x] Create hooks: `useTextBlocksQuery`, `useTextBlocksEditSheetColumns`, `useBatchUpdateTextBlocksMutation`.
 - [x] Add `/text-blocks` route to application router.
-- [ ] Add integration test coverage mirroring rules edit sheet scenarios (including Shift+Arrow textarea nav).
-- [ ] Verify Save disabled until meaningful valid changes; verify cancel confirmation.
-- [ ] Ensure UI parity (toolbars, loading, error handling) with rules edit sheet.
+- [x] Add integration test coverage mirroring rules edit sheet scenarios (including Shift+Arrow textarea nav).
+- [ ] Run tests and verify all scenarios pass.
+- [ ] Verify UI parity (toolbars, loading, error handling) with rules edit sheet.
