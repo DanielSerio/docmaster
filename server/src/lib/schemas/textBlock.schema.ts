@@ -25,7 +25,7 @@ export const textBlockSchema = z.object({
 export type TextBlock = z.infer<typeof textBlockSchema>;
 
 export const createTextBlockInputSchema = textBlockSchema.omit({ id: true });
-export const updateTextBlockInputSchema = textBlockSchema;
+export const updateTextBlockInputSchema = textBlockSchema.omit({ id: true }).partial();
 
 export type CreateTextBlockInput = z.infer<typeof createTextBlockInputSchema>;
 export type UpdateTextBlockInput = z.infer<typeof updateTextBlockInputSchema>;
@@ -42,9 +42,16 @@ export const deleteManyTextBlocksInputSchema = z.object({
   ids: z.array(idSchema).min(1, getMessage("ids", "arrayMin"))
 });
 
+// Schema for batch update items (includes id for identification)
+export const batchUpdateTextBlockItemSchema = z.object({
+  id: idSchema,
+  rawContent: rawContentSchema,
+  defaultPriority: defaultPrioritySchema
+});
+
 export const batchUpdateTextBlocksInputSchema = z.object({
   newTextBlocks: z.array(createTextBlockInputSchema).default([]),
-  updatedTextBlocks: z.array(updateTextBlockInputSchema).default([]),
+  updatedTextBlocks: z.array(batchUpdateTextBlockItemSchema).default([]),
   deletedIds: z.array(idSchema).default([])
 });
 

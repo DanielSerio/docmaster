@@ -89,30 +89,32 @@ const batchUpdateTextBlocksImpl = async (data: BatchUpdateTextBlocksInput) => {
     }
 
     // 3. Create new text blocks
-    for (const textBlockData of data.newTextBlocks) {
-      const textBlock = await tx.textBlock.create({
-        data: {
-          rawContent: textBlockData.rawContent,
-          defaultPriority: textBlockData.defaultPriority,
-        }
-      });
-
-      // Get all existing general documents
+    if (data.newTextBlocks.length > 0) {
+      // Get all existing general documents once (outside the loop)
       const generalDocuments = await tx.document.findMany({
         where: { documentType: "general" },
         select: { id: true },
       });
 
-      // Create junction records for all general documents
-      if (generalDocuments.length > 0) {
-        await tx.documentTextBlock.createMany({
-          data: generalDocuments.map((doc) => ({
-            documentId: doc.id,
-            textBlockId: textBlock.id,
-            priority: textBlock.defaultPriority,
-            isEnabled: false,
-          })),
+      for (const textBlockData of data.newTextBlocks) {
+        const textBlock = await tx.textBlock.create({
+          data: {
+            rawContent: textBlockData.rawContent,
+            defaultPriority: textBlockData.defaultPriority,
+          }
         });
+
+        // Create junction records for all general documents
+        if (generalDocuments.length > 0) {
+          await tx.documentTextBlock.createMany({
+            data: generalDocuments.map((doc) => ({
+              documentId: doc.id,
+              textBlockId: textBlock.id,
+              priority: textBlock.defaultPriority,
+              isEnabled: false,
+            })),
+          });
+        }
       }
     }
 
