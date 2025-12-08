@@ -27,7 +27,8 @@ function EditSheetRoot<TData extends ESRowType, TSave = BatchChanges<TData>>({
     handleSave,
     handleCancel,
     enterEditMode,
-    hasChanges
+    hasChanges,
+    hasMeaningfulChanges
   } = useEditSheetState<TData, TSave>({ data, columns, isLoading, onSave, mapChanges, getRowId });
 
   const contextValue = useMemo(
@@ -72,6 +73,7 @@ function EditSheetRoot<TData extends ESRowType, TSave = BatchChanges<TData>>({
           hasChanges={hasChanges}
           isSaving={isSaving}
           isValid={validation.isValid}
+          hasMeaningfulChanges={hasMeaningfulChanges}
         />
         <div className="overflow-auto">
           <EditSheetNavigator>

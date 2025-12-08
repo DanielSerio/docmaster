@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 interface UseEditSheetKeyboardProps {
   mode: 'view' | 'edit';
   isValid: boolean;
+  hasMeaningfulChanges: boolean;
   isSaving: boolean;
   onCancel: () => void;
   onSave: () => void;
@@ -11,6 +12,7 @@ interface UseEditSheetKeyboardProps {
 export function useEditSheetKeyboard({
   mode,
   isValid,
+  hasMeaningfulChanges,
   isSaving,
   onCancel,
   onSave
@@ -28,7 +30,7 @@ export function useEditSheetKeyboard({
       // Ctrl+S or Cmd+S to save
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
-        if (isValid && !isSaving) {
+        if (isValid && hasMeaningfulChanges && !isSaving) {
           onSave();
         }
       }
@@ -36,5 +38,5 @@ export function useEditSheetKeyboard({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mode, isValid, isSaving, onCancel, onSave]);
+  }, [mode, isValid, hasMeaningfulChanges, isSaving, onCancel, onSave]);
 }

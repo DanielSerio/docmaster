@@ -69,6 +69,44 @@ export function useEditSheetState<TData extends ESRowType, TSave = BatchChanges<
     });
   }, []);
 
+  const normalizeRow = useCallback((row: TData) => {
+    const entries = Object.entries(row).filter(
+      ([key]) => key !== '__isNew' && key !== '__isDeleted' && key !== 'id'
+    );
+    return Object.fromEntries(entries);
+  }, []);
+
+  const originalById = useMemo(() => {
+    const map = new Map<TData['id'], Record<string, unknown>>();
+    originalData.forEach((row) => {
+      if (row.id !== undefined && row.id !== null) {
+        map.set(row.id, normalizeRow(row));
+      }
+    });
+    return map;
+  }, [originalData, normalizeRow]);
+
+  const newRows = useMemo(
+    () => localData.filter((row) => row.__isNew && !row.__isDeleted && !isRowEmpty(row)),
+    [localData]
+  );
+
+  const deletedIds = useMemo(
+    () => localData.filter((row) => row.__isDeleted && row.id).map((row) => row.id!),
+    [localData]
+  );
+
+  const updatedRows = useMemo(
+    () =>
+      localData.filter((row) => {
+        if (row.__isNew || row.__isDeleted || !row.id) return false;
+        const original = originalById.get(row.id);
+        if (!original) return false;
+        return JSON.stringify(normalizeRow(row)) !== JSON.stringify(original);
+      }),
+    [localData, originalById, normalizeRow]
+  );
+
   const handleSave = async () => {
     const isValid = validation.validateAll();
     if (!isValid) {
@@ -76,9 +114,9 @@ export function useEditSheetState<TData extends ESRowType, TSave = BatchChanges<
     }
 
     const changes: BatchChanges<TData> = {
-      new: localData.filter((row) => row.__isNew && !row.__isDeleted && !isRowEmpty(row)),
-      updated: localData.filter((row) => !row.__isNew && !row.__isDeleted && row.id),
-      deletedIds: localData.filter((row) => row.__isDeleted && row.id).map((row) => row.id!)
+      new: newRows,
+      updated: updatedRows,
+      deletedIds
     };
 
     try {
@@ -91,9 +129,11 @@ export function useEditSheetState<TData extends ESRowType, TSave = BatchChanges<
     }
   };
 
-  const hasChanges = useMemo(() => {
-    return JSON.stringify(localData) !== JSON.stringify(originalData);
-  }, [localData, originalData]);
+  const hasMeaningfulChanges = useMemo(() => {
+    return newRows.length > 0 || updatedRows.length > 0 || deletedIds.length > 0;
+  }, [newRows, updatedRows, deletedIds]);
+
+  const hasChanges = hasMeaningfulChanges;
 
   useEffect(() => {
     if (mode === 'edit') {
@@ -104,6 +144,7 @@ export function useEditSheetState<TData extends ESRowType, TSave = BatchChanges<
   useEditSheetKeyboard({
     mode,
     isValid: validation.isValid,
+    hasMeaningfulChanges,
     isSaving,
     onCancel: handleCancel,
     onSave: handleSave
@@ -120,6 +161,7 @@ export function useEditSheetState<TData extends ESRowType, TSave = BatchChanges<
     handleSave,
     handleCancel,
     enterEditMode,
-    hasChanges
+    hasChanges,
+    hasMeaningfulChanges
   };
 }

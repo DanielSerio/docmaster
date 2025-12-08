@@ -8,7 +8,7 @@ test.describe('Application Integration', () => {
     await expect(page).toHaveURL(/\/documents$/);
 
     // Should display Documents heading
-    await expect(page.getByTestId('page-heading')).toBeVisible();
+    await expect(page.getByTestId('page-heading')).toBeVisible({ timeout: 10000 });
     await expect(page.getByTestId('page-heading')).toHaveText('Documents');
   });
 

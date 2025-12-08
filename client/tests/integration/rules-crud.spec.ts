@@ -131,31 +131,39 @@ test.describe('Rules CRUD Operations', () => {
     await expect(page.getByTestId('edit-button')).toBeVisible({ timeout: 5000 });
   });
 
-  test('should prevent saving with invalid data', async ({ page }) => {
-    // Enter edit mode
+  test('should disable save immediately on entering edit mode when no changes exist', async ({ page }) => {
     await page.getByTestId('edit-button').click();
+    const saveButton = page.getByTestId('save-button');
+    await expect(saveButton).toBeDisabled();
+  });
 
-    // Try to save without filling required fields
+  test('should keep save disabled when only content is filled (category missing)', async ({ page }) => {
+    await page.getByTestId('edit-button').click();
     const saveButton = page.getByTestId('save-button');
 
-    // Save button should be disabled when validation fails
-    await expect(saveButton).toBeDisabled();
-
-    // Fill only the content (missing category)
-    const contentInput = page.getByTestId('input-rawContent').first();
+    const contentInput = page.getByTestId('input-rawContent').last();
     await contentInput.fill('Test content');
 
-    // Save button should still be disabled (missing category)
     await expect(saveButton).toBeDisabled();
+  });
 
-    // Add category
-    const categoryTrigger = page.getByTestId('category-typeahead-trigger').first();
+  test('should enable save after required content and category are provided', async ({ page }) => {
+    await page.getByTestId('edit-button').click();
+    const saveButton = page.getByTestId('save-button');
+
+    const contentInputs = page.getByTestId('input-rawContent');
+    const categoryTriggers = page.getByTestId('category-typeahead-trigger');
+    const targetIndex = (await contentInputs.count()) - 1; // current empty row before it spawns the next sentinel
+
+    const contentInput = contentInputs.nth(targetIndex);
+    await contentInput.fill('Test content');
+
+    const categoryTrigger = categoryTriggers.nth(targetIndex);
     await categoryTrigger.click();
     const categoryInput = page.getByTestId('category-typeahead-input');
     await categoryInput.fill('Valid Category');
     await categoryTrigger.click();
 
-    // Now save button should be enabled
     await expect(saveButton).toBeEnabled();
   });
 

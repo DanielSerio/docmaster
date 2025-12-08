@@ -11,6 +11,7 @@ interface ESToolbarProps {
   hasChanges: boolean;
   isSaving: boolean;
   isValid: boolean;
+  hasMeaningfulChanges: boolean;
 }
 
 export function ESToolbar({
@@ -20,7 +21,8 @@ export function ESToolbar({
   onCancel,
   hasChanges,
   isSaving,
-  isValid
+  isValid,
+  hasMeaningfulChanges
 }: ESToolbarProps) {
   const handleCancel = () => {
     if (hasChanges) {
@@ -57,7 +59,7 @@ export function ESToolbar({
           </Button>
           <AsyncButton
             onClick={onSave}
-            disabled={!isValid}
+            disabled={!isValid || !hasMeaningfulChanges}
             isBusy={isSaving}
             icon={<Save className="h-4 w-4" />}
             data-testid="save-button"
