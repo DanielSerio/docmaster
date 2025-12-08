@@ -10,7 +10,7 @@ import type { DTRowType } from '../types';
 import type { DTMetaFilter } from '../filters.types';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, memo } from 'react';
 
 interface FilterColumnProps {
   columnId: string;
@@ -20,7 +20,7 @@ interface FilterColumnProps {
   clearFilter: (columnId: string) => void;
 }
 
-function FilterColumn({
+const FilterColumn = memo(function FilterColumn({
   columnId,
   filterConfig,
   value,
@@ -92,7 +92,7 @@ function FilterColumn({
     default:
       return null;
   }
-}
+});
 
 export function DTFilter<TData extends DTRowType>() {
   const { table, filteringController } = useDataTableContext<TData>();

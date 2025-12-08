@@ -86,12 +86,12 @@ function DataTableRoot<TData extends DTRowType>({
     );
   }, [children]);
 
-  const contextValue: DataTableContextValue<TData> = {
+  const contextValue: DataTableContextValue<TData> = useMemo(() => ({
     table,
     gridTemplateColumns,
     filteringController,
     sortingController
-  };
+  }), [table, gridTemplateColumns, filteringController, sortingController]);
 
   return (
     <DataTableProvider value={contextValue}>

@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/trpc';
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
-    (trpc as any).createClient({
+    trpc.createClient({
       links: [
         httpBatchLink({
           url: API_URL,
@@ -17,13 +17,11 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
     })
   );
 
-  const TRPCProviderAny = trpc as any;
-
   return (
-    <TRPCProviderAny.Provider client={trpcClient} queryClient={queryClient}>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         {children}
       </QueryClientProvider>
-    </TRPCProviderAny.Provider>
+    </trpc.Provider>
   );
 }
